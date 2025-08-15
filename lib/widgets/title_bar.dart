@@ -324,7 +324,7 @@ class OrderTrackingTitleBarState extends State<OrderTrackingTitleBar> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: whiteColor,
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

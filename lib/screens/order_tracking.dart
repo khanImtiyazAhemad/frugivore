@@ -67,13 +67,168 @@ class OrderTrackingPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 5),
+                                  SizedBox(width: 10),
                                   Expanded(
-                                    flex: 12,
+                                    flex: 10,
                                     child: Text(
                                       "We'll assign a delivery partner as soon as your order is processed",
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 16),
+                                      style: TextStyle(fontSize: 16, height: 1),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Card(
+                            margin: plr10,
+                            shape: roundedCircularRadius,
+                            child: Padding(
+                              padding: p10,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: p10,
+                                      color: yellowColor,
+                                      child: FaIcon(
+                                        getIconFromCss('fat fa-moped'),
+                                        color: whiteColor,
+                                        size: 32,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    flex: 10,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "You'r delivery details",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            height: 1,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Details of your current order",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Card(
+                            margin: plr10,
+                            shape: roundedCircularRadius,
+                            child: Padding(
+                              padding: p10,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: p10,
+                                      color: yellowColor,
+                                      child: FaIcon(
+                                        getIconFromCss('fat fa-message'),
+                                        color: whiteColor,
+                                        size: 32,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    flex: 10,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Need help with this order?",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            height: 1,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Chat with us about any issue related to your order",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                    flex: 1,
+                                    child: FaIcon(
+                                        getIconFromCss('fat fa-angle-right'),
+                                        color: yellowColor,
+                                        size: 32,
+                                      ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Card(
+                            margin: plr10,
+                            shape: roundedCircularRadius,
+                            child: Padding(
+                              padding: p10,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: p10,
+                                      color: yellowColor,
+                                      child: FaIcon(
+                                        getIconFromCss(
+                                          'fat fa-basket-shopping',
+                                        ),
+                                        color: whiteColor,
+                                        size: 32,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    flex: 10,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Order Summary",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            height: 1,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Order ID: #FGV000111",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
