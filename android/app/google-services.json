@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "612886671653",
+    "project_id": "frugivore-d50d8",
+    "storage_bucket": "frugivore-d50d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612886671653:android:ee099257da6651ba566acc",
+        "android_client_info": {
+          "package_name": "com.frugivore.india"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "612886671653-s37tm3pvss80qbjuj5joiqi845do6tan.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD58sAPCmkg2imjXhjf_CZnTOSTWZYh13E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "612886671653-s37tm3pvss80qbjuj5joiqi845do6tan.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "612886671653-tojvp1dj2sv0of9ip7cbfc2v9ick45p7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.frugivore.in"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
