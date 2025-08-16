@@ -22,7 +22,7 @@ class OrderTrackingPage extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(),
       drawer: CustomDrawer(),
-      bottomNavigationBar: CustomConditionalBottomBar(),
+      bottomNavigationBar: CustomConditionalBottomBar(controller: controller),
       body: SmartRefresher(
         enablePullDown: true,
         header: WaterDropMaterialHeader(color: primaryColor),
@@ -44,8 +44,10 @@ class OrderTrackingPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           OrderTrackingTitleBar(
-                            title: "Order Tracking - FGV0001111",
-                            subTitle: "Order placed",
+                            title:
+                                "Order Tracking - #${controller.data.invoiceNumber}",
+                            subTitle: "${controller.data.orderStatus}"
+                                .toUpperCase(),
                             search: false,
                           ),
                           Card(
@@ -86,42 +88,140 @@ class OrderTrackingPage extends StatelessWidget {
                             shape: roundedCircularRadius,
                             child: Padding(
                               padding: p10,
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: p10,
-                                      color: yellowColor,
-                                      child: FaIcon(
-                                        getIconFromCss('fat fa-moped'),
-                                        color: whiteColor,
-                                        size: 32,
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: p10,
+                                          color: yellowColor,
+                                          child: FaIcon(
+                                            getIconFromCss('fat fa-moped'),
+                                            color: whiteColor,
+                                            size: 32,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        flex: 10,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "You'r delivery details",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                height: 1,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Details of your current order",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                height: 1,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    flex: 10,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "You'r delivery details",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            height: 1,
-                                          ),
+                                  Divider(color: borderColor),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: FaIcon(
+                                          getIconFromCss('fat fa-location-dot'),
+                                          color: yellowColor,
+                                          size: 24,
                                         ),
-                                        Text(
-                                          "Details of your current order",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            height: 1,
-                                          ),
+                                      ),
+                                      SizedBox(width: 15),
+                                      Expanded(
+                                        flex: 12,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Delivery at Home",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                height: 1,
+                                              ),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                            Text(
+                                              "${controller.data.address}",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                height: 1,
+                                              ),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                            controller.data.canChangeDateTime!
+                                                ? GestureDetector(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          "Change Address",
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            height: 1,
+                                                            color: primaryColor,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        FaIcon(
+                                                          getIconFromCss(
+                                                            'fat fa-angle-right',
+                                                          ),
+                                                          color: primaryColor,
+                                                          size: 14,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    onTap: () =>
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          "/address-list",
+                                                        ).then(
+                                                          (value) => controller
+                                                              .apicall(
+                                                                controller.uuid,
+                                                              ),
+                                                        ),
+                                                  )
+                                                : SizedBox(),
+                                          ],
                                         ),
-                                      ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    padding: p5,
+                                    decoration: BoxDecoration(
+                                      color: yellowColor,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "Now update your address effortlessly if you've ordered at an incorrect location",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: whiteColor,
+                                        height: 1,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -134,54 +234,60 @@ class OrderTrackingPage extends StatelessWidget {
                             shape: roundedCircularRadius,
                             child: Padding(
                               padding: p10,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: p10,
-                                      color: yellowColor,
-                                      child: FaIcon(
-                                        getIconFromCss('fat fa-message'),
-                                        color: whiteColor,
-                                        size: 32,
+                              child: GestureDetector(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        padding: p10,
+                                        color: yellowColor,
+                                        child: FaIcon(
+                                          getIconFromCss('fat fa-message'),
+                                          color: whiteColor,
+                                          size: 32,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    flex: 10,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Need help with this order?",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            height: 1,
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      flex: 10,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Need help with this order?",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              height: 1,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          "Chat with us about any issue related to your order",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            height: 1,
+                                          Text(
+                                            "Chat with us about any issue related to your order",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              height: 1,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                    flex: 1,
-                                    child: FaIcon(
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      flex: 1,
+                                      child: FaIcon(
                                         getIconFromCss('fat fa-angle-right'),
                                         color: yellowColor,
                                         size: 32,
                                       ),
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  "/order-detail/${controller.data.orderId}",
+                                ),
                               ),
                             ),
                           ),
@@ -191,45 +297,142 @@ class OrderTrackingPage extends StatelessWidget {
                             shape: roundedCircularRadius,
                             child: Padding(
                               padding: p10,
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: p10,
-                                      color: yellowColor,
-                                      child: FaIcon(
-                                        getIconFromCss(
-                                          'fat fa-basket-shopping',
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: p10,
+                                          color: yellowColor,
+                                          child: FaIcon(
+                                            getIconFromCss(
+                                              'fat fa-basket-shopping',
+                                            ),
+                                            color: whiteColor,
+                                            size: 32,
+                                          ),
                                         ),
-                                        color: whiteColor,
-                                        size: 32,
                                       ),
-                                    ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        flex: 10,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Order Summary",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                height: 1,
+                                              ),
+                                            ),
+                                            Text(
+                                              "Order ID: #${controller.data.invoiceNumber}",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                height: 1,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    flex: 10,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Order Summary",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            height: 1,
-                                          ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: FaIcon(
+                                          getIconFromCss('fat fa-memo-pad'),
+                                          color: Colors.black,
+                                          size: 14,
                                         ),
-                                        Text(
-                                          "Order ID: #FGV000111",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            height: 1,
-                                          ),
+                                      ),
+                                      Expanded(
+                                        flex: 8,
+                                        child: Text(
+                                          "Items Total",
+                                          style: TextStyle(fontSize: 12),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          "Rs.${controller.data.orderValue}",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: FaIcon(
+                                          getIconFromCss('fat fa-bicycle'),
+                                          color: Colors.black,
+                                          size: 14,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 8,
+                                        child: Text(
+                                          "Delivery Charge",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          "Rs.${controller.data.deliveryCharges}",
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 11,
+                                        child: Text(
+                                          "Grand Total",
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          "Rs.${controller.data.totalPrice}",
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Divider(),
+                                  Wrap(
+                                    spacing: 8, // horizontal gap
+                                    runSpacing: 8, // vertical gap
+                                    children: controller.data.orderItems!
+                                        .map<Widget>((obj) {
+                                          return Padding(
+                                            padding: p5,
+                                            child: Image.asset(
+                                              'assets/images/logo.png',
+                                              height: 40,
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
                                   ),
                                 ],
                               ),

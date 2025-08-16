@@ -41,7 +41,8 @@ class CartPage extends StatelessWidget {
                 offerText: "OFFERS APPLIED",
                 controller: controller,
               )
-            : CustomConditionalBottomBar(),
+            : CustomConditionalBottomBar(
+            controller: controller),
       ),
       body: SmartRefresher(
         enablePullDown: true,

@@ -32,6 +32,7 @@ class HomeController extends GetxController {
   var subCategoryStaticLength = 9;
   int bannersLength = 0;
   int tilesLength = 0;
+  int activeOrdersLength = 0;
   // var timerQueue = Queue<Duration>();
 
   ScrollController scrollController = ScrollController();
@@ -52,6 +53,8 @@ class HomeController extends GetxController {
       HomeController._lastUndeliveredOrder.value = value;
 
   final tiles = List<MarketingTilesModel>.empty(growable: true).obs;
+
+   final activeOrders = List<ActiveOrdersModel>.empty(growable: true).obs;
 
   final categories = List<CategoryList>.empty(growable: true).obs;
   final subCategories = List<SubCategoriesModel>.empty(growable: true).obs;
@@ -84,6 +87,14 @@ class HomeController extends GetxController {
     if (response != null) {
       tilesLength = response.length;
       tiles.assignAll(response);
+    }
+  }
+
+  void activeOrdersApi() async {
+    var response = await Services.activeOrders();
+    if (response != null) {
+      activeOrdersLength = response.length;
+      activeOrders.assignAll(response);
     }
   }
 
@@ -199,6 +210,7 @@ class HomeController extends GetxController {
       testimonialsApi();
       blogsApi();
       recentOrderFeedbackApi();
+      activeOrdersApi();
       if (box.hasData('token')) {
         var offerContent = await UtilsServices.offerContent();
         if (offerContent != null) {

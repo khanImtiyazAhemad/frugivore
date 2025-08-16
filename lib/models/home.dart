@@ -900,6 +900,44 @@ class MarketingTilesModel {
 }
 
 
+List<ActiveOrdersModel> activeOrdersModelFromJson(String str) => List<ActiveOrdersModel>.from(json.decode(str).map((x) => ActiveOrdersModel.fromJson(x)));
+
+String activeOrdersModelToJson(List<ActiveOrdersModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class ActiveOrdersModel {
+    int? id;
+    String? orderId;
+    String? invoiceNumber;
+    String? orderStatus;
+    String? orderItemText;
+
+    ActiveOrdersModel({
+        this.id,
+        this.orderId,
+        this.invoiceNumber,
+        this.orderStatus,
+        this.orderItemText,
+    });
+
+        factory ActiveOrdersModel.fromJson(Map<String, dynamic> json) => ActiveOrdersModel(
+        id: json["id"],
+        orderId: json["order_id"],
+        invoiceNumber: json["invoice_number"],
+        orderStatus: json["order_status"],
+        orderItemText: json["order_item_text"]
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "order_id": orderId,
+        "invoice_number": invoiceNumber,
+        "order_status": orderStatus,
+        "order_item_text": orderItemText
+    };
+
+}
+
+
 
 EarliestDeliverySlotModel earliestDeliverySlotModelFromJson(String str) => EarliestDeliverySlotModel.fromJson(json.decode(str));
 
@@ -936,3 +974,6 @@ class EarliestDeliverySlotModel {
         "show": show,
     };
 }
+
+
+

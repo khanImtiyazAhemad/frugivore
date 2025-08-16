@@ -329,14 +329,9 @@ class CustomCartNavigationBarState extends State<CustomCartNavigationBar> {
   }
 }
 
-class ActiveOrdersNavigation extends StatefulWidget {
-  const ActiveOrdersNavigation({super.key});
-
-  @override
-  ActiveOrdersNavigationState createState() => ActiveOrdersNavigationState();
-}
-
-class ActiveOrdersNavigationState extends State<ActiveOrdersNavigation> {
+class ActiveOrdersNavigation extends StatelessWidget {
+  final dynamic controller;
+  const ActiveOrdersNavigation({super.key, this.controller});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -344,7 +339,9 @@ class ActiveOrdersNavigationState extends State<ActiveOrdersNavigation> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: [1, 2, 3, 4].map<Widget>((item) {
+          children: controller.activeOrders.asMap().entries.map<Widget>((entry) {
+            int index = entry.key + 1;       // index here
+            var item = entry.value; 
             return GestureDetector(
               child: Container(
                 padding: p5,
@@ -367,22 +364,35 @@ class ActiveOrdersNavigationState extends State<ActiveOrdersNavigation> {
                           size: 30,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      SizedBox(width: 20),
                       Expanded(
-                        flex: 7,
+                        flex: 10,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "#FFGV0000111",
+                              "#${item.invoiceNumber}",
                               style: TextStyle(fontSize: 12, height: 1),
                             ),
+                            if (item.orderStatus == "Order Placed")
+                              Text(
+                                "Order is placed",
+                                style: TextStyle(fontSize: 12, height: 1, color: orangeColor),
+                              )
+                            else if (item.orderStatus == "Order Processed")
+                              Text(
+                                  "Order is processed",
+                                  style: TextStyle(fontSize: 12, height: 1, color: orangeColor),
+                                )
+                            else if (item.orderStatus == "Out for Delivery")
+                              Text(
+                                  "Order Out for Delivery",
+                                  style: TextStyle(fontSize: 12, height: 1, color: orangeColor),
+                                ),
                             Text(
-                              "Order is placed",
-                              style: TextStyle(fontSize: 12, height: 1),
-                            ),
-                            Text(
-                              "Farm Fresh Brown Eggs",
+                              "${item.orderItemText}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 12, height: 1),
                             ),
                           ],
@@ -395,14 +405,16 @@ class ActiveOrdersNavigationState extends State<ActiveOrdersNavigation> {
                             primaryColor,
                             whiteColor,
                           ),
-                          onPressed: () =>
-                              Navigator.pushNamed(context, "/purchase-items"),
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            "/order-detail/${item!.orderId}",
+                          ),
                           child: Text("View", style: TextStyle(fontSize: 12)),
                         ),
                       ),
                       SizedBox(
                         height: 30,
-                        width: 20, // 🔹 Must give height
+                        width: 10, // 🔹 Must give height
                         child: VerticalDivider(
                           color: primaryColor,
                           thickness: 1,
@@ -410,16 +422,16 @@ class ActiveOrdersNavigationState extends State<ActiveOrdersNavigation> {
                         ),
                       ),
                       Expanded(
-                        flex: 1,
+                        flex: 2,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("1/1", style: TextStyle(fontSize: 10)),
+                            Text("$index/${controller.activeOrdersLength}", style: TextStyle(fontSize: 10)),
                             SizedBox(height: 2),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: List.generate(
-                                3,
+                                controller.activeOrdersLength,
                                 (index) => Container(
                                   margin: const EdgeInsets.symmetric(
                                     horizontal: 1,
@@ -442,7 +454,7 @@ class ActiveOrdersNavigationState extends State<ActiveOrdersNavigation> {
               ),
               onTap: () => Navigator.pushNamed(
                 context,
-                "/order-tracking/234-2343-235-234",
+                "/order-tracking/${item!.orderId}",
               ),
             );
           }).toList(),
@@ -453,7 +465,9 @@ class ActiveOrdersNavigationState extends State<ActiveOrdersNavigation> {
 }
 
 class CustomConditionalBottomBar extends StatelessWidget {
-  const CustomConditionalBottomBar({super.key});
+  final dynamic controller;
+  final bool show;
+  const CustomConditionalBottomBar({super.key, this.controller, this.show=false});
 
   @override
   Widget build(BuildContext context) {
@@ -462,7 +476,10 @@ class CustomConditionalBottomBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (int.parse(globals.payload['cart']) > 0) CustomCartNavigationBar(),
-          if (int.parse(globals.payload['cart']) == 0) ActiveOrdersNavigation(),
+          if (int.parse(globals.payload['cart']) == 0 &&
+              show && controller.activeOrders != null &&
+              controller.activeOrders!.isNotEmpty)
+            ActiveOrdersNavigation(controller: controller),
           if (int.parse(globals.payload['cart']) == 0 &&
               globals.payload['sticky_offer_content'] != null &&
               globals.payload['sticky_offer_content'] != "")

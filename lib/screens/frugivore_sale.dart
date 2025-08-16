@@ -25,7 +25,8 @@ class FrugivoreSalePage extends StatelessWidget {
     final controller = Get.put(FrugivoreSaleController());
     return Scaffold(
         appBar: CustomAppBar(),
-        bottomNavigationBar: CustomConditionalBottomBar(),
+        bottomNavigationBar: CustomConditionalBottomBar(
+            controller: controller),
         drawer: CustomDrawer(),
         body: SmartRefresher(
             enablePullDown: true,

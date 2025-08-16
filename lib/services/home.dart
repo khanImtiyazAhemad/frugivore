@@ -254,6 +254,28 @@ class Services {
         .toList();
   }
 
+  static Future<List<ActiveOrdersModel>>? activeOrders() async {
+    Map<String, String>? headers = await utils.getHeaders();
+
+    try {
+      final response = await client.get(
+        Uri.parse('${url}active-orders'),
+        headers: headers,
+      );
+      List<ActiveOrdersModel> list = parseActiveOrders(response.body);
+      return list;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static List<ActiveOrdersModel> parseActiveOrders(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parsed
+        .map<ActiveOrdersModel>((json) => ActiveOrdersModel.fromJson(json))
+        .toList();
+  }
+
   static Future<EarliestDeliverySlotModel>? fetchEarliestDeliverySlot() async {
     Map<String, String>? headers = await utils.getHeaders();
 

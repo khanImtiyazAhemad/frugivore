@@ -22,7 +22,8 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
         appBar: CustomAppBar(),
         drawer: CustomDrawer(),
-        bottomNavigationBar: CustomConditionalBottomBar(),
+        bottomNavigationBar: CustomConditionalBottomBar(
+            controller: controller),
         body: SmartRefresher(
             enablePullDown: true,
             header: WaterDropMaterialHeader(color: primaryColor),

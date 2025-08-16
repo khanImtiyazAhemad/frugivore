@@ -33,7 +33,8 @@ class ChildCartPage extends StatelessWidget {
                     text: "CHECKOUT",
                     offer: false,
                     controller: controller)
-                : CustomConditionalBottomBar()),
+                : CustomConditionalBottomBar(
+            controller: controller)),
         body: SmartRefresher(
             enablePullDown: true,
             header: WaterDropMaterialHeader(color: primaryColor),

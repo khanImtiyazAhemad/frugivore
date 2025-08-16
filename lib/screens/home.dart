@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
       canPop: false,
       child: Scaffold(
         appBar: CustomAppBar(),
-        bottomNavigationBar: CustomConditionalBottomBar(),
+        bottomNavigationBar: CustomConditionalBottomBar(controller: controller, show: true),
         drawer: CustomDrawer(),
         body: SmartRefresher(
           enablePullDown: true,

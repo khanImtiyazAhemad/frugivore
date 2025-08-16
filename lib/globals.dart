@@ -34,8 +34,8 @@ RxMap titles = {
   "blogs" : {"title": "Engage", "heading": ""},
 }.obs;
 
-// const String baseuri = "http://localhost:8000/";
-const String baseuri = "https://api.frugivore.in/";
+const String baseuri = "http://localhost:8000/";
+// const String baseuri = "https://api.frugivore.in/";
 // const String baseuri = "https://staging.frugivore.in/";
 const String webUri = "https://frugivore.in/";
 
