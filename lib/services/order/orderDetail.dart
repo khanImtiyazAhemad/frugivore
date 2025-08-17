@@ -20,6 +20,7 @@ class Services {
         headers: headers,
       );
       final jsonResponse = json.decode(response.body);
+      print(jsonResponse);
       OrderDetailModel data = OrderDetailModel.fromJson(jsonResponse);
       return data;
     } catch (e) {

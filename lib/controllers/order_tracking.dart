@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:frugivore/models/order/orderDetail.dart';
-import 'package:frugivore/services/order/orderDetail.dart';
+import 'package:frugivore/models/order_tracking.dart';
+import 'package:frugivore/services/order_tracking.dart';
 import 'package:frugivore/globals.dart' as globals;
 
 class OrderTrackingController extends GetxController {
@@ -12,8 +12,8 @@ class OrderTrackingController extends GetxController {
     initialRefresh: false,
   );
 
-  final _data = OrderDetailModel().obs;
-  OrderDetailModel get data => _data.value;
+  final _data = OrderTrackingModel().obs;
+  OrderTrackingModel get data => _data.value;
   set data(value) => _data.value = value;
 
   final _activeNormalDateRecord = DateRecord().obs;
@@ -27,7 +27,7 @@ class OrderTrackingController extends GetxController {
   void apicall(uuid) async {
     try {
       isLoader(true);
-      var response = await Services.fetchOrderDetail(uuid);
+      var response = await Services.fetchOrderTracking(uuid);
       if (response != null) {
         _data.value = response;
       }

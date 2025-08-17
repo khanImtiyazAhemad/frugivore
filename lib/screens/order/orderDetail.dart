@@ -199,13 +199,13 @@ class OrderDeliverySlot extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("Order Status: ${controller.data.orderStatus}",
-                          style: TextStyle(fontSize: 12)),
+                          style: TextStyle(fontSize: 12, height: 1)),
                       SizedBox(height: 5),
                       Text("Date: ${controller.data.deliveryDate}",
-                          style: TextStyle(fontSize: 12)),
+                          style: TextStyle(fontSize: 12, height: 1)),
                       SizedBox(height: 5),
                       Text("Time Slot: ${controller.data.deliverySlot}",
-                          style: TextStyle(fontSize: 12)),
+                          style: TextStyle(fontSize: 12, height: 1)),
                     ]),
               ),
               Expanded(
@@ -252,7 +252,7 @@ class OrderAddressDetail extends StatelessWidget {
                 child: Text("Address: ${controller.data.address}",
                     maxLines: 5,
                     softWrap: true,
-                    style: TextStyle(fontSize: 12))),
+                    style: TextStyle(fontSize: 12, height: 1))),
             Expanded(
                 flex: 3,
                 child: controller.data.canChangeDateTime!

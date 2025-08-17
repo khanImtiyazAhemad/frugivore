@@ -10,6 +10,8 @@ import 'package:frugivore/widgets/bottom_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:font_awesome_flutter/name_icon_mapping.dart';
 import 'package:frugivore/controllers/order_tracking.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:frugivore/connectivity.dart';
 
@@ -50,38 +52,119 @@ class OrderTrackingPage extends StatelessWidget {
                                 .toUpperCase(),
                             search: false,
                           ),
-                          Card(
-                            margin: plr10,
-                            shape: roundedCircularRadius,
-                            child: Padding(
-                              padding: p10,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: p10,
-                                      color: yellowColor,
-                                      child: FaIcon(
-                                        getIconFromCss('fat fa-user-cowboy'),
-                                        color: whiteColor,
-                                        size: 32,
-                                      ),
+                          controller.data.deliveryBoyName != null &&
+                                  controller.data.deliveryBoyName!.isNotEmpty
+                              ? Card(
+                                  margin: plr10,
+                                  shape: roundedCircularRadius,
+                                  child: Padding(
+                                    padding: p10,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            padding: p10,
+                                            color: yellowColor,
+                                            child: FaIcon(
+                                              getIconFromCss(
+                                                'fat fa-user-cowboy',
+                                              ),
+                                              color: whiteColor,
+                                              size: 32,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          flex: 10,
+                                          child: Text(
+                                            "I'm ${controller.data.deliveryBoyName}, your delivery partner",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              height: 1,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          flex: 2,
+                                          child: GestureDetector(
+                                            child: Container(
+                                              padding: p10,
+                                              decoration: BoxDecoration(
+                                                color: yellowColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              child: FaIcon(
+                                                getIconFromCss('fat fa-phone'),
+                                                color: whiteColor,
+                                                size: 26,
+                                              ),
+                                            ),
+                                            onTap: () async {
+                                              final phone = controller
+                                                  .data
+                                                  .deliveryBoyPhone; // or any number
+                                              final Uri callUri = Uri(
+                                                scheme: 'tel',
+                                                path: phone,
+                                              );
+
+                                              if (await canLaunchUrl(callUri)) {
+                                                await launchUrl(callUri);
+                                              } else {
+                                                // handle error
+                                                debugPrint(
+                                                  "Could not launch dialer",
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    flex: 10,
-                                    child: Text(
-                                      "We'll assign a delivery partner as soon as your order is processed",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 16, height: 1),
+                                )
+                              : Card(
+                                  margin: plr10,
+                                  shape: roundedCircularRadius,
+                                  child: Padding(
+                                    padding: p10,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            padding: p10,
+                                            color: yellowColor,
+                                            child: FaIcon(
+                                              getIconFromCss(
+                                                'fat fa-user-cowboy',
+                                              ),
+                                              color: whiteColor,
+                                              size: 32,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          flex: 10,
+                                          child: Text(
+                                            "We'll assign a delivery partner as soon as your order is processed",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              height: 1,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                ),
                           SizedBox(height: 10),
                           Card(
                             margin: plr10,
@@ -353,7 +436,7 @@ class OrderTrackingPage extends StatelessWidget {
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 8,
+                                        flex: 10,
                                         child: Text(
                                           "Items Total",
                                           style: TextStyle(fontSize: 12),
@@ -381,7 +464,7 @@ class OrderTrackingPage extends StatelessWidget {
                                         ),
                                       ),
                                       Expanded(
-                                        flex: 8,
+                                        flex: 10,
                                         child: Text(
                                           "Delivery Charge",
                                           style: TextStyle(fontSize: 12),
@@ -409,7 +492,7 @@ class OrderTrackingPage extends StatelessWidget {
                                       ),
                                       SizedBox(width: 5),
                                       Expanded(
-                                        flex: 4,
+                                        flex: 3,
                                         child: Text(
                                           "Rs.${controller.data.totalPrice}",
                                           style: TextStyle(fontSize: 14),
@@ -424,15 +507,28 @@ class OrderTrackingPage extends StatelessWidget {
                                     runSpacing: 8, // vertical gap
                                     children: controller.data.orderItems!
                                         .map<Widget>((obj) {
-                                          return Padding(
-                                            padding: p5,
-                                            child: Image.asset(
-                                              'assets/images/logo.png',
-                                              height: 40,
-                                            ),
-                                          );
+                                          return obj.image != null
+                                              ? CachedNetworkImage(
+                                                  imageUrl: obj.image!,
+                                                  height: 60,
+                                                )
+                                              : Image.asset(
+                                                  'assets/images/logo.png',
+                                                  height: 60,
+                                                );
                                         })
                                         .toList(),
+                                  ),
+                                  Divider(),
+                                  GestureDetector(
+                                    child: Text(
+                                      "View Summary",
+                                      style: TextStyle(color: primaryColor),
+                                    ),
+                                    onTap: () => Navigator.pushNamed(
+                                      context,
+                                      "/order-detail/${controller.data.orderId}",
+                                    ),
                                   ),
                                 ],
                               ),

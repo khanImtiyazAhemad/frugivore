@@ -53,7 +53,7 @@ class OrderDetailController extends GetxController {
       child: Text(
         text,
         textAlign: textAlign ?? TextAlign.start,
-        style: TextStyle(fontSize: 12.0, color: color),
+        style: TextStyle(fontSize: 12.0, color: color, height: 1),
       ),
     );
   }
