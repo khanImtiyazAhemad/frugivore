@@ -23,6 +23,7 @@ class CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: whiteColor,
         child: SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(

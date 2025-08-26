@@ -56,6 +56,7 @@ class OrderTrackingPage extends StatelessWidget {
                                   controller.data.deliveryBoyName!.isNotEmpty
                               ? Card(
                                   margin: plr10,
+                                  color: whiteColor,
                                   shape: roundedCircularRadius,
                                   child: Padding(
                                     padding: p10,
@@ -130,6 +131,7 @@ class OrderTrackingPage extends StatelessWidget {
                                 )
                               : Card(
                                   margin: plr10,
+                                  color: whiteColor,
                                   shape: roundedCircularRadius,
                                   child: Padding(
                                     padding: p10,
@@ -168,6 +170,7 @@ class OrderTrackingPage extends StatelessWidget {
                           SizedBox(height: 10),
                           Card(
                             margin: plr10,
+                            color: whiteColor,
                             shape: roundedCircularRadius,
                             child: Padding(
                               padding: p10,
@@ -314,6 +317,7 @@ class OrderTrackingPage extends StatelessWidget {
                           SizedBox(height: 10),
                           Card(
                             margin: plr10,
+                            color: whiteColor,
                             shape: roundedCircularRadius,
                             child: Padding(
                               padding: p10,
@@ -377,6 +381,7 @@ class OrderTrackingPage extends StatelessWidget {
                           SizedBox(height: 10),
                           Card(
                             margin: plr10,
+                            color: whiteColor,
                             shape: roundedCircularRadius,
                             child: Padding(
                               padding: p10,

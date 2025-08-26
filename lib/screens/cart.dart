@@ -41,8 +41,7 @@ class CartPage extends StatelessWidget {
                 offerText: "OFFERS APPLIED",
                 controller: controller,
               )
-            : CustomConditionalBottomBar(
-            controller: controller),
+            : CustomConditionalBottomBar(controller: controller),
       ),
       body: SmartRefresher(
         enablePullDown: true,
@@ -59,6 +58,54 @@ class CartPage extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 child: controller.isLoader.value
                     ? Loader()
+                    : controller.cart.data != null &&
+                          controller.cart.data!.isEmpty
+                    ? Column(
+                      children: [
+                        CustomTitleBar(title: "Cart", search: true),
+                        Padding(
+                            padding: p10,
+                            child: Column(
+                              children: [
+                                Image.asset("assets/images/cart.jpeg"),
+                                SizedBox(height: 10),
+                                SizedBox(
+                                  height: buttonHeight,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ElevatedButton(
+                                    style: customElevatedButton(
+                                      pinkColor,
+                                      whiteColor,
+                                    ),
+                                    onPressed: () => Navigator.pushNamed(
+                                      context,
+                                      "/",
+                                    ).then((value) => controller.apicall()),
+                                    child: Text("Shop"),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                SizedBox(
+                                  height: buttonHeight,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ElevatedButton(
+                                    style: customElevatedButton(
+                                      pinkColor,
+                                      whiteColor,
+                                    ),
+                                    onPressed: () => Navigator.pushNamed(
+                                      context,
+                                      "/my-shopping-lists",
+                                      arguments: [],
+                                    ).then((value) => controller.apicall()),
+                                    child: Text("Shop from Shopping List"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    )
                     : Column(
                         children: [
                           CustomTitleBar(title: "Cart", search: true),
@@ -68,65 +115,98 @@ class CartPage extends StatelessWidget {
                             shape: roundedHalfCircularRadius,
                             child: Container(
                               padding: p10,
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: p10,
-                                      decoration: ShapeDecoration(
-                                        color: primaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                            width: 1.0,
-                                            style: BorderStyle.solid,
-                                            color: borderColor,
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: p10,
+                                          decoration: ShapeDecoration(
+                                            color: primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                width: 1.0,
+                                                style: BorderStyle.solid,
+                                                color: borderColor,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0),
+                                              ),
+                                            ),
                                           ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
+                                          child: FaIcon(
+                                            getIconFromCss('fat fa-clock'),
+                                            color: whiteColor,
+                                            size: 36,
                                           ),
                                         ),
                                       ),
-                                      child: FaIcon(
-                                        getIconFromCss('fat fa-clock'),
-                                        color: whiteColor,
-                                        size: 36,
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        flex: 8,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "Order will be deliverer on:",
+                                              style: TextStyle(
+                                                height: 1,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            controller
+                                                        .activeNormalDateRecord
+                                                        .value !=
+                                                    ""
+                                                ? Text(
+                                                    "${controller.parseDateTime(controller.activeNormalDateRecord.value)} at ${controller.selectedTimeSlotTitle.value}",
+                                                    style: TextStyle(
+                                                      height: 1,
+                                                      fontSize: 13,
+                                                    ),
+                                                  )
+                                                : SizedBox(),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    flex: 8,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          "Order will be deliverer on:",
-                                          style: TextStyle(
-                                            height: 1,
-                                            fontSize: 13,
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        flex: 2,
+                                        child: GestureDetector(
+                                          child: Text(
+                                            controller.timeContainerTitle.value,
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                              color: primaryColor,
+                                            ),
                                           ),
+                                          onTap: () => controller
+                                              .showHideTimeContainer(),
                                         ),
-                                        Text(
-                                          "Aug 06,2025 at Morning Slot (11 am to 2 pm)",
-                                          style: TextStyle(
-                                            height: 1,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      "Change",
-                                      style: TextStyle(color: primaryColor),
-                                    ),
-                                  ),
+                                  controller.showTimeContainer.value
+                                      ? Column(
+                                          children: [
+                                            Padding(
+                                              padding: pt5,
+                                              child:
+                                                  NormalDateSelectorContainer(
+                                                    items: controller
+                                                        .cart
+                                                        .dateRecords!,
+                                                  ),
+                                            ),
+                                            NormalTimeRow(),
+                                            SizedBox(height: 10),
+                                          ],
+                                        )
+                                      : SizedBox(),
                                 ],
                               ),
                             ),
@@ -136,68 +216,12 @@ class CartPage extends StatelessWidget {
                             margin: plr10,
                             color: whiteColor,
                             shape: roundedHalfCircularRadius,
-                            child: controller.cart.data!.isEmpty
-                                ? Padding(
-                                    padding: p10,
-                                    child: Column(
-                                      children: [
-                                        Image.asset("assets/images/cart.jpeg"),
-                                        SizedBox(height: 10),
-                                        SizedBox(
-                                          height: buttonHeight,
-                                          width: MediaQuery.of(
-                                            context,
-                                          ).size.width,
-                                          child: ElevatedButton(
-                                            style: customElevatedButton(
-                                              pinkColor,
-                                              whiteColor,
-                                            ),
-                                            onPressed: () =>
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  "/",
-                                                ).then(
-                                                  (value) =>
-                                                      controller.apicall(),
-                                                ),
-                                            child: Text("Shop"),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        SizedBox(
-                                          height: buttonHeight,
-                                          width: MediaQuery.of(
-                                            context,
-                                          ).size.width,
-                                          child: ElevatedButton(
-                                            style: customElevatedButton(
-                                              pinkColor,
-                                              whiteColor,
-                                            ),
-                                            onPressed: () =>
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  "/my-shopping-lists",
-                                                  arguments: [],
-                                                ).then(
-                                                  (value) =>
-                                                      controller.apicall(),
-                                                ),
-                                            child: Text(
-                                              "Shop from Shopping List",
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Padding(
-                                    padding: p10,
-                                    child: ProductSection(
-                                      items: controller.cart.data!,
-                                    ),
-                                  ),
+                            child: Padding(
+                              padding: p10,
+                              child: ProductSection(
+                                items: controller.cart.data!,
+                              ),
+                            ),
                           ),
                           SizedBox(height: 15),
                           Card(
@@ -251,37 +275,40 @@ class CartPage extends StatelessWidget {
                           SizedBox(height: 15),
                           SavedCardContainer(),
                           SizedBox(height: 15),
-                          Card(
-                            color: lightRedColor,
-                            margin: plr10,
-                            shape: roundedHalfCircularRadius,
-                            child: Container(
-                              padding: p10,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    "Recharge your wallet to get more savings",
-                                    style: TextStyle(color: whiteColor),
+                          int.parse(controller.total.value) > 0
+                              ? Card(
+                                  color: lightRedColor,
+                                  margin: plr10,
+                                  shape: roundedHalfCircularRadius,
+                                  child: Container(
+                                    padding: p10,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Recharge your wallet to get more savings",
+                                          style: TextStyle(color: whiteColor),
+                                        ),
+                                        SizedBox(height: 5),
+                                        ElevatedButton(
+                                          style:
+                                              cartRechargeNowCustomElevatedButton(
+                                                whiteColor,
+                                                lightRedColor,
+                                              ),
+                                          child: Text(
+                                            "RECHARGE NOW",
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          onPressed: () => Navigator.pushNamed(
+                                            context,
+                                            "/recharge/''",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  SizedBox(height: 5),
-                                  ElevatedButton(
-                                    style: cartRechargeNowCustomElevatedButton(
-                                      whiteColor,
-                                      lightRedColor,
-                                    ),
-                                    child: Text(
-                                      "RECHARGE NOW",
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                    onPressed: () => Navigator.pushNamed(
-                                      context,
-                                      "/recharge/''",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                )
+                              : SizedBox(),
                           SizedBox(height: 15),
                           if (controller.deliveryInstruction.isNotEmpty)
                             DeliveryInstructionContainer(
@@ -338,104 +365,110 @@ class SavedCardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
-    return Card(
-      color: whiteColor,
-      margin: plr10,
-      shape: roundedHalfCircularRadius,
-      child: Container(
-        padding: p15,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Billing Details", style: TextStyle(fontSize: 16)),
-            SizedBox(height: 5),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: FaIcon(
-                    getIconFromCss('fat fa-percent'),
-                    color: Colors.black,
-                    size: 14,
-                  ),
-                ),
-                Expanded(flex: 10, child: Text("Saved")),
-                SizedBox(width: 5),
-                Expanded(flex: 2, child: Text("Rs.${controller.saved}")),
-              ],
-            ),
-            Divider(),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: FaIcon(
-                    getIconFromCss('fat fa-memo-pad'),
-                    color: Colors.black,
-                    size: 14,
-                  ),
-                ),
-                Expanded(flex: 10, child: Text("Items Total")),
-                SizedBox(width: 5),
-                Expanded(flex: 2, child: Text("Rs.${controller.subTotal}")),
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: FaIcon(
-                    getIconFromCss('fat fa-bicycle'),
-                    color: Colors.black,
-                    size: 14,
-                  ),
-                ),
-                Expanded(flex: 10, child: Text("Delivery Charge")),
-                SizedBox(width: 5),
-                Expanded(flex: 2, child: Text("Rs.${controller.deliveryFee}")),
-              ],
-            ),
-            Divider(),
-            Row(
-              children: [
-                Expanded(
-                  flex: 11,
-                  child: Text("Grand Total", style: TextStyle(fontSize: 15)),
-                ),
-                SizedBox(width: 5),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    "Rs.${controller.total}",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 5),
-            controller.cart.cashbackMessage != "" &&
-                    controller.cart.cashbackMessage != null
-                ? Text(
-                    "${controller.cart.cashbackMessage}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: yellowColor, fontSize: 12),
-                  )
-                : SizedBox(),
-            controller.cart.cashbackSubmessage != "" &&
-                    controller.cart.cashbackSubmessage != null
-                ? Text(
-                    "${controller.cart.cashbackSubmessage}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: yellowColor,
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
+    return Obx(
+      () => Card(
+        color: whiteColor,
+        margin: plr10,
+        shape: roundedHalfCircularRadius,
+        child: Container(
+          padding: p15,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Billing Details", style: TextStyle(fontSize: 16)),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: FaIcon(
+                      getIconFromCss('fat fa-percent'),
+                      color: Colors.black,
+                      size: 14,
                     ),
-                  )
-                : SizedBox(),
-          ],
+                  ),
+                  Expanded(flex: 10, child: Text("Saved")),
+                  SizedBox(width: 5),
+                  Expanded(flex: 2, child: Text("Rs.${controller.saved}")),
+                ],
+              ),
+              Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: FaIcon(
+                      getIconFromCss('fat fa-memo-pad'),
+                      color: Colors.black,
+                      size: 14,
+                    ),
+                  ),
+                  Expanded(flex: 10, child: Text("Items Total")),
+                  SizedBox(width: 5),
+                  Expanded(flex: 2, child: Text("Rs.${controller.subTotal}")),
+                ],
+              ),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: FaIcon(
+                      getIconFromCss('fat fa-bicycle'),
+                      color: Colors.black,
+                      size: 14,
+                    ),
+                  ),
+                  Expanded(flex: 10, child: Text("Delivery Charge")),
+                  SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: Text("Rs.${controller.deliveryFee}"),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: Text("Grand Total", style: TextStyle(fontSize: 15)),
+                  ),
+                  SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      "Rs.${controller.total}",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              controller.cart.cashbackMessage != "" &&
+                      controller.cart.cashbackMessage != null
+                  ? Text(
+                      "${controller.cart.cashbackMessage}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: yellowColor, fontSize: 12),
+                    )
+                  : SizedBox(),
+              controller.cart.cashbackSubmessage != "" &&
+                      controller.cart.cashbackSubmessage != null
+                  ? Text(
+                      "${controller.cart.cashbackSubmessage}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: yellowColor,
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    )
+                  : SizedBox(),
+            ],
+          ),
         ),
       ),
     );
@@ -593,7 +626,12 @@ class CartProductCard extends StatelessWidget {
                         ),
                         if (item.package!.displayDiscount != null)
                           Container(
-                            padding: EdgeInsets.only(top: 7, left: 5, bottom: 7, right: 5),
+                            padding: EdgeInsets.only(
+                              top: 7,
+                              left: 5,
+                              bottom: 7,
+                              right: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: pinkColor,
                               shape: BoxShape.rectangle,
@@ -658,10 +696,10 @@ class CartProductCard extends StatelessWidget {
                                         color: Colors.black,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
-                                        height: 1
+                                        height: 1,
                                       ),
                                     ),
-                                    SizedBox(height: 5)
+                                    SizedBox(height: 5),
                                   ],
                                 ),
                               ),
@@ -735,7 +773,7 @@ class CartProductCard extends StatelessWidget {
                                                 color: Colors.black,
                                                 decoration:
                                                     TextDecoration.lineThrough,
-                                                    height: 1
+                                                height: 1,
                                               ),
                                             ),
                                           if (item.flashSale!)
@@ -745,7 +783,7 @@ class CartProductCard extends StatelessWidget {
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.black,
-                                                height: 1
+                                                height: 1,
                                               ),
                                             )
                                           else
@@ -861,6 +899,7 @@ class DeleteItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       actionsPadding: EdgeInsets.all(10),
       title: Text('Delete Item', textAlign: TextAlign.center),
@@ -880,6 +919,7 @@ class DeleteItem extends StatelessWidget {
         SizedBox(
           width: MediaQuery.of(context).size.width * .4,
           child: ElevatedButton(
+            style: customElevatedButton(darkGrey, whiteColor),
             child: Text('NO'),
             onPressed: () => Navigator.of(context).pop(),
           ),
@@ -896,6 +936,7 @@ class EmptyCart extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       actionsPadding: EdgeInsets.all(10),
       title: Text('Empty Cart', textAlign: TextAlign.center),
@@ -931,6 +972,7 @@ class EmptyCartValidation extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       actionsPadding: EdgeInsets.all(10),
       content: Column(
@@ -967,6 +1009,7 @@ class MinimumAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       actionsPadding: EdgeInsets.all(10),
       content: Column(
@@ -997,6 +1040,7 @@ class AddAddress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       actionsPadding: EdgeInsets.all(10),
       content: Column(
@@ -1033,6 +1077,7 @@ class InactiveItems extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       actionsPadding: EdgeInsets.all(10),
       content: Column(
@@ -1067,6 +1112,7 @@ class EndorseProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       contentPadding: EdgeInsets.zero,
       content: Column(
@@ -1106,6 +1152,7 @@ class ChildOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       title: Text(
         "You have a pending order ${item.invoiceNumber}.",
@@ -1275,12 +1322,12 @@ class SliderProductCardState extends State<SliderProductCard> {
                       maxLines: 2,
                       softWrap: true,
                       style: TextStyle(
-                        color: Colors.white, 
-                        fontSize: 10, 
-                        height: 0.7, 
+                        color: Colors.white,
+                        fontSize: 10,
+                        height: 0.7,
                         fontWeight: FontWeight.w800,
                         fontFamily: 'Chantal',
-                        ),
+                      ),
                     ),
                   ),
               ],
@@ -1351,7 +1398,7 @@ class SliderProductCardState extends State<SliderProductCard> {
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
                             decoration: TextDecoration.lineThrough,
-                            height: 1
+                            height: 1,
                           ),
                         ),
                         Text(
@@ -1360,7 +1407,7 @@ class SliderProductCardState extends State<SliderProductCard> {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
-                            height: 1
+                            height: 1,
                           ),
                         ),
                       ],
@@ -1483,6 +1530,172 @@ class SliderProductCardState extends State<SliderProductCard> {
         Get.context!,
         "/product-details/${widget.item.slug}",
       ),
+    );
+  }
+}
+
+//  ----------------- NORMAL CONTAINER SECTION --------------------------
+class NormalDateSelectorContainer extends StatelessWidget {
+  final List<DateRecord> items;
+  NormalDateSelectorContainer({super.key, required this.items});
+  final controller = Get.put(CartController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => Row(
+        children: items.map<Widget>((item) {
+          if (item.checked! &&
+              controller.activeNormalDateRecord.value == null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              controller.activeNormalDateRecord = item;
+              controller.activeNormalTimeRecord.assignAll(item.time!);
+              controller.selectedNormalTimeSlot("");
+            });
+          }
+
+          return Expanded(
+            flex: items.length,
+            child: GestureDetector(
+              child: Container(
+                alignment: Alignment.center,
+                decoration: boxDecorationWithOutRadius.copyWith(
+                  color: item.value == controller.activeNormalDateRecord.value
+                      ? primaryColor
+                      : null,
+                ),
+                child: Stack(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  children: [
+                    Container(
+                      padding: ptb10,
+                      child: Column(
+                        children: [
+                          Text(
+                            item.day!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              height: 1,
+                              fontSize: 12,
+                              color:
+                                  item.value ==
+                                      controller.activeNormalDateRecord.value
+                                  ? whiteColor
+                                  : null,
+                            ),
+                          ),
+                          Text(
+                            item.date!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              height: 1,
+                              fontSize: 12,
+                              color:
+                                  item.value ==
+                                      controller.activeNormalDateRecord.value
+                                  ? whiteColor
+                                  : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (item.value == controller.activeNormalDateRecord.value)
+                      Triangle(
+                        color: whiteColor,
+                        height: 5,
+                        width: 10,
+                        direction: "ULLRS",
+                      ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                controller.activeNormalDateRecord = item;
+                controller.activeNormalTimeRecord.assignAll(item.time!);
+                controller.selectedNormalTimeSlot("");
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class NormalTimeRow extends StatelessWidget {
+  final controller = Get.put(CartController());
+
+  NormalTimeRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: controller.activeNormalTimeRecord.map<Widget>((time) {
+        if (controller.selectedNormalTimeSlot.value == "" && !time.disable!) {
+          controller.selectedNormalTimeSlot(time.id.toString());
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            controller.selectedTimeSlotTitle(time.value);
+          });
+        }
+        return GestureDetector(
+          onTap: () {
+            controller.selectedTimeSlotTitle(time.value);
+            controller.selectedNormalTimeSlot(
+              !time.disable! ? time.id.toString() : "",
+            );
+          },
+          child: Container(
+            padding: plr10,
+            decoration: boxDecorationlbrBorder,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(0),
+                    visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                    title: Text(
+                      time.value!,
+                      style: TextStyle(
+                        height: 1,
+                        fontSize: 12,
+                        color: time.disable! ? borderColor : null,
+                      ),
+                    ),
+                    leading: SizedBox(
+                      height: 24.0,
+                      width: 24.0,
+                      child: Radio(
+                        activeColor: packageColor,
+                        value: !time.disable! ? time.id.toString() : "",
+                        groupValue: time.disable!
+                            ? null
+                            : controller.selectedNormalTimeSlot.value,
+                        onChanged: (value) =>
+                            controller.selectedNormalTimeSlot(value.toString()),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    time.text!,
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: time.disable! ? Colors.red : packageColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

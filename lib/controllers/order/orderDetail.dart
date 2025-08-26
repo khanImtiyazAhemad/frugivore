@@ -211,7 +211,7 @@ class OrderDetailController extends GetxController {
 
   void payNow() {
     var options = {
-      'key': globals.RAZOR_API_KEY,
+      'key': globals.razorApiKey,
       "name": "Frugviore India Pvt Ltd",
       "description": "Secure Payment Page",
       "theme": {"color": "#787878"},

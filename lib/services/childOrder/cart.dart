@@ -17,8 +17,10 @@ class Services {
     Map<String, String>? headers = await utils.getHeaders();
 
     try {
-      final response = await client.get(Uri.parse("${url}child-cart/$uuid"),
-          headers: headers);
+      final response = await client.get(
+        Uri.parse("${url}child-cart/$uuid"),
+        headers: headers,
+      );
       final jsonResponse = json.decode(response.body);
       if (response.statusCode == 200) {
         ChildCartModel detail = ChildCartModel.fromJson(jsonResponse);
@@ -35,11 +37,13 @@ class Services {
     final token = await AuthServices.getToken();
 
     try {
-      final response = await client
-          .get(Uri.parse("${url}empty-cart"), headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'JWT $token'
-      });
+      final response = await client.get(
+        Uri.parse("${url}empty-cart"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'JWT $token',
+        },
+      );
       final jsonResponse = json.decode(response.body);
       if (response.statusCode == 200) {
         globals.payload['cart'] = "0";
@@ -58,17 +62,38 @@ class Services {
 
     try {
       final response = await client.get(
-          Uri.parse("${url}child-cart-validation/$uuid"),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': 'JWT $token'
-          });
+        Uri.parse("${url}child-cart-validation/$uuid"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'JWT $token',
+        },
+      );
       final jsonResponse = json.decode(response.body);
       // print("Response $jsonResponse");
       if (response.statusCode == 200) {
         return jsonResponse;
       } else if (response.statusCode == 400) {
         return jsonResponse;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future orderCreation(uuid, data) async {
+    Map<String, String>? headers = await utils.getHeaders();
+    try {
+      final response = await client.post(
+        Uri.parse("${url}child-order-creation/$uuid"),
+        headers: headers,
+        body: json.encode(data),
+      );
+      final jsonResponse = json.decode(response.body);
+      // print("Response $jsonResponse");
+      if (response.statusCode == 200) {
+        return jsonResponse;
+      } else {
+        throw Exception(jsonResponse['message']);
       }
     } catch (e) {
       throw Exception(e.toString());

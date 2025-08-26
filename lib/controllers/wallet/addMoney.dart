@@ -60,7 +60,7 @@ class AddMoneyController extends GetxController {
           "You can't charge your wallet with less than Rs 1000 or more than Rs 20000");
     } else {
       var options = {
-        'key': globals.RAZOR_API_KEY,
+        'key': globals.razorApiKey,
         'amount': int.parse(money.text) * 100,
         "name": "Frugviore India Pvt Ltd",
         "description": "Secure Payment Page",

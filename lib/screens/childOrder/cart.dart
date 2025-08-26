@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:swipe_to/swipe_to.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:font_awesome_flutter/name_icon_mapping.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:frugivore/widgets/app_bar.dart';
@@ -24,267 +27,320 @@ class ChildCartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ChildCartController());
     return Scaffold(
-        appBar: CustomAppBar(),
-        drawer: CustomDrawer(),
-        bottomNavigationBar: Obx(() =>
-            controller.cart.data != null && controller.cart.data!.isNotEmpty
-                ? CustomOrderNavigationBar(
-                    amount: controller.total.value,
-                    text: "CHECKOUT",
-                    offer: false,
-                    controller: controller)
-                : CustomConditionalBottomBar(
-            controller: controller)),
-        body: SmartRefresher(
-            enablePullDown: true,
-            header: WaterDropMaterialHeader(color: primaryColor),
-            controller: controller.refreshController,
-            onRefresh: controller.onRefresh,
-            onLoading: controller.onLoading,
-            child: NetworkSensitive(
-                child: Container(
-                    color: bodyColor,
-                    width: MediaQuery.of(context).size.width,
-                    child: Obx(() {
-                      return SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: controller.isLoader.value
-                              ? Loader()
-                              : Column(children: [
-                                  CustomTitleBar(title: "Cart", search: false),
-                                  Card(
-                                      margin: plr10,
-                                      shape: roundedCircularRadius,
-                                      child: controller.cart.data!.isEmpty
-                                          ? Padding(
-                                              padding: p10,
-                                              child: Column(
-                                                children: [
-                                                  Image.asset(
-                                                      "assets/images/cart.jpg"),
-                                                  SizedBox(height: 10),
-                                                  SizedBox(
-                                                      height: buttonHeight,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      child: ElevatedButton(
-                                                        style:
-                                                            customElevatedButton(
-                                                                pinkColor,
-                                                                whiteColor),
-                                                        onPressed: () =>
-                                                            Navigator.pushNamed(
-                                                                context, "/"),
-                                                        child: Text("Shop"),
-                                                      )),
-                                                  SizedBox(height: 10),
-                                                  SizedBox(
-                                                      height: buttonHeight,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      child: ElevatedButton(
-                                                        style:
-                                                            customElevatedButton(
-                                                                pinkColor,
-                                                                whiteColor),
-                                                        onPressed: () =>
-                                                            Navigator.pushNamed(
-                                                                context,
-                                                                "/my-shopping-lists", arguments:[]),
-                                                        child: Text(
-                                                            "Shop from Shopping List"),
-                                                      )),
-                                                ],
-                                              ))
-                                          : Column(children: [
-                                            Padding(
-                                                padding: p10,
-                                                child: Column(children: [
-                                                  Padding(
-                                                      padding: ptb20,
-                                                      child: Text("My Cart",
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600))),
-                                                  if (controller
-                                                          .cart.address !=
-                                                      null)
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: Icon(Icons
-                                                              .location_on_rounded),
-                                                        ),
-                                                        Expanded(
-                                                          flex: 8,
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                  "${controller.cart.address!.address}, ${controller.cart.address!.area} ${controller.cart.address!.city}-${controller.cart.address!.pinCode}",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left),
-                                                              Text(
-                                                                  "${controller.cart.address!.name} - ${controller.cart.address!.phone}",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .left)
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          flex: 1,
-                                                          child: IconButton(
-                                                            icon: Icon(
-                                                                Icons.edit),
-                                                            onPressed: () =>
-                                                                Navigator.pushNamed(
-                                                                    context,
-                                                                    '/address-list'),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 2,
-                                                        child:
-                                                            ElevatedButton(
-                                                          style: customElevatedButton(
-                                                              yellowColor,
-                                                              whiteColor),
-                                                          onPressed: () =>
-                                                              Navigator
-                                                                  .pushNamed(
-                                                                      context,
-                                                                      "/"),
-                                                          child: Text(
-                                                              "ADD MORE"),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Expanded(
-                                                        flex: 2,
-                                                        child:
-                                                            ElevatedButton(
-                                                          style:
-                                                              customElevatedButton(
-                                                                  darkGrey,
-                                                                  whiteColor),
-                                                          onPressed: () =>
-                                                              showDialog(
-                                                            context:
-                                                                context,
-                                                            builder: (_) =>
-                                                                EmptyCart(),
-                                                            barrierDismissible:
-                                                                false,
-                                                          ),
-                                                          child: Text(
-                                                              "EMPTY CART"),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  ProductSection(
-                                                      items: controller
-                                                          .cart.data!)
-                                                ])),
-                                            Container(
-                                              color: darkGrey,
-                                              child: Padding(
-                                                  padding: p10,
-                                                  child: IntrinsicHeight(
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                            flex: 3,
-                                                            child: Text(
-                                                              "Saved Rs ${controller.saved.value}",
-                                                              style: TextStyle(
-                                                                  color:
-                                                                      yellowColor,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  fontSize:
-                                                                      16),
-                                                            )),
-                                                        Expanded(
-                                                            flex: 2,
-                                                            child: Image.asset(
-                                                                "assets/images/piggy.png")),
-                                                        VerticalDivider(
-                                                            width: 5,
-                                                            thickness: 1,
-                                                            color:
-                                                                whiteColor),
-                                                        SizedBox(width: 5),
-                                                        Expanded(
-                                                          flex: 6,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                  "Sub Total: ${controller.subTotal.value}",
-                                                                  style: TextStyle(
-                                                                      color:
-                                                                          whiteColor,
-                                                                      fontSize:
-                                                                          18)),
-                                                              SizedBox(
-                                                                  height:
-                                                                      5),
-                                                              Text(
-                                                                  "Delivery Fee: ${controller.deliveryFee.value}",
-                                                                  style: TextStyle(
-                                                                      color:
-                                                                          whiteColor,
-                                                                      fontSize:
-                                                                          18))
-                                                            ],
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )),
+      appBar: CustomAppBar(),
+      drawer: CustomDrawer(),
+      bottomNavigationBar: Obx(
+        () => controller.cart.data != null && controller.cart.data!.isNotEmpty
+            ? CustomOrderNavigationBar(
+                amount: controller.total.value,
+                text: "CHECKOUT",
+                offer: false,
+                controller: controller,
+              )
+            : CustomConditionalBottomBar(controller: controller),
+      ),
+      body: SmartRefresher(
+        enablePullDown: true,
+        header: WaterDropMaterialHeader(color: primaryColor),
+        controller: controller.refreshController,
+        onRefresh: controller.onRefresh,
+        onLoading: controller.onLoading,
+        child: NetworkSensitive(
+          child: Container(
+            color: bodyColor,
+            width: MediaQuery.of(context).size.width,
+            child: Obx(() {
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: controller.isLoader.value
+                    ? Loader()
+                    : controller.cart.data != null &&
+                          controller.cart.data!.isEmpty
+                    ? Column(
+                      children: [
+                        CustomTitleBar(title: "Cart", search: true),
+                        Padding(
+                            padding: p10,
+                            child: Column(
+                              children: [
+                                Image.asset("assets/images/cart.jpeg"),
+                                SizedBox(height: 10),
+                                SizedBox(
+                                  height: buttonHeight,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ElevatedButton(
+                                    style: customElevatedButton(
+                                      pinkColor,
+                                      whiteColor,
+                                    ),
+                                    onPressed: () => Navigator.pushNamed(
+                                      context,
+                                      "/",
+                                    ).then((value) => controller.apicall(controller.uuid)),
+                                    child: Text("Shop"),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                SizedBox(
+                                  height: buttonHeight,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ElevatedButton(
+                                    style: customElevatedButton(
+                                      pinkColor,
+                                      whiteColor,
+                                    ),
+                                    onPressed: () => Navigator.pushNamed(
+                                      context,
+                                      "/my-shopping-lists",
+                                      arguments: [],
+                                    ).then((value) => controller.apicall(controller.uuid)),
+                                    child: Text("Shop from Shopping List"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    )
+                    : Column(
+                        children: [
+                          CustomTitleBar(title: "Cart", search: true),
+                          Card(
+                            margin: plr10,
+                            color: whiteColor,
+                            shape: roundedHalfCircularRadius,
+                            child: Container(
+                              padding: p10,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: p10,
+                                          decoration: ShapeDecoration(
+                                            color: primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                width: 1.0,
+                                                style: BorderStyle.solid,
+                                                color: borderColor,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0),
+                                              ),
                                             ),
-                                            SizedBox(height: 2),
-                                            Padding(
-                                                padding: p5,
-                                                child: Align(
-                                                    alignment: Alignment
-                                                        .centerLeft,
-                                                    child: Text(
-                                                      "${controller.cart.message}",
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: TextStyle(
-                                                          color: pinkColor),
-                                                    )))
-                                          ])),
-                                  SizedBox(height: 80)
-                                ]));
-                    })))));
+                                          ),
+                                          child: FaIcon(
+                                            getIconFromCss('fat fa-clock'),
+                                            color: whiteColor,
+                                            size: 36,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        flex: 10,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "Order will be deliverer on:",
+                                              style: TextStyle(
+                                                height: 1,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            controller
+                                                        .activeNormalDateRecord
+                                                        .value !=
+                                                    ""
+                                                ? Text(
+                                                    "${controller.parseDateTime(controller.activeNormalDateRecord.value)} at ${controller.selectedTimeSlotTitle.value}",
+                                                    style: TextStyle(
+                                                      height: 1,
+                                                      fontSize: 13,
+                                                    ),
+                                                  )
+                                                : SizedBox(),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          Card(
+                            margin: plr10,
+                            color: whiteColor,
+                            shape: roundedHalfCircularRadius,
+                            child: Padding(
+                              padding: p10,
+                              child: ProductSection(
+                                items: controller.cart.data!,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          SavedCardContainer(),
+                          SizedBox(height: 15),
+                          int.parse(controller.total.value) > 0
+                              ? Card(
+                                  color: lightRedColor,
+                                  margin: plr10,
+                                  shape: roundedHalfCircularRadius,
+                                  child: Container(
+                                    padding: p10,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Recharge your wallet to get more savings",
+                                          style: TextStyle(color: whiteColor),
+                                        ),
+                                        SizedBox(height: 5),
+                                        ElevatedButton(
+                                          style:
+                                              cartRechargeNowCustomElevatedButton(
+                                                whiteColor,
+                                                lightRedColor,
+                                              ),
+                                          child: Text(
+                                            "RECHARGE NOW",
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          onPressed: () => Navigator.pushNamed(
+                                            context,
+                                            "/recharge/''",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
+   
+ 
+
+                          SizedBox(height: 15),
+                          Text(
+                            "**No Questions asked Refunds or Returns",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 80),
+                        ],
+                      ),
+                      );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SavedCardContainer extends StatelessWidget {
+  const SavedCardContainer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.put(ChildCartController());
+    return Obx(
+      () => Card(
+        color: whiteColor,
+        margin: plr10,
+        shape: roundedHalfCircularRadius,
+        child: Container(
+          padding: p15,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Billing Details", style: TextStyle(fontSize: 16)),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: FaIcon(
+                      getIconFromCss('fat fa-percent'),
+                      color: Colors.black,
+                      size: 14,
+                    ),
+                  ),
+                  Expanded(flex: 10, child: Text("Saved")),
+                  SizedBox(width: 5),
+                  Expanded(flex: 2, child: Text("Rs.${controller.saved}")),
+                ],
+              ),
+              Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: FaIcon(
+                      getIconFromCss('fat fa-memo-pad'),
+                      color: Colors.black,
+                      size: 14,
+                    ),
+                  ),
+                  Expanded(flex: 10, child: Text("Items Total")),
+                  SizedBox(width: 5),
+                  Expanded(flex: 2, child: Text("Rs.${controller.subTotal}")),
+                ],
+              ),
+              SizedBox(height: 5),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: FaIcon(
+                      getIconFromCss('fat fa-bicycle'),
+                      color: Colors.black,
+                      size: 14,
+                    ),
+                  ),
+                  Expanded(flex: 10, child: Text("Delivery Charge")),
+                  SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: Text("Rs.${controller.deliveryFee}"),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+              Divider(),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: Text("Grand Total", style: TextStyle(fontSize: 15)),
+                  ),
+                  SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      "Rs.${controller.total}",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -300,17 +356,27 @@ class ProductSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                padding: p10,
+              padding: p5,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
                 color: backgroundGrey,
-                width: MediaQuery.of(context).size.width,
-                child: Text(
-                  data.name!,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                )),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Text(
+                data.name!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'GravesendSans',
+                ),
+              ),
+            ),
             Column(
-                children: data.items!.map((product) {
-              return CartProductCard(item: product);
-            }).toList())
+              children: data.items!.map((product) {
+                return CartProductCard(item: product);
+              }).toList(),
+            ),
           ],
         );
       }).toList(),
@@ -325,221 +391,295 @@ class CartProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ChildCartController());
-    final quantityController =
-        TextEditingController(text: "${item.quantity}");
-    return Container(
-        decoration: BoxDecoration(
-          color: whiteColor,
-          border: Border(top: BorderSide(color: borderColor)),
-        ),
-        padding: p5,
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: [
-              Expanded(
-                  flex: 3,
-                  child: Stack(
-                    alignment: Alignment.topLeft,
-                    children: [
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          child: CachedNetworkImage(
-                              imageUrl: item.package!.imgOne!)),
-                      if (item.package!.displayDiscount != null)
-                        Container(
-                            padding: EdgeInsets.all(8),
+    final quantityController = TextEditingController(text: "${item.quantity}");
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(
+        Get.context!,
+        "/product-details/${item.product!.slug}",
+      ),
+      child: SwipeTo(
+        child: Container(
+          decoration: BoxDecoration(color: whiteColor),
+          padding: p5,
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Stack(
+                      alignment: Alignment.topLeft,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: item.package!.imgOne!,
+                          width: MediaQuery.of(context).size.width * 0.25,
+                        ),
+                        if (item.package!.displayDiscount != null)
+                          Container(
+                            padding: EdgeInsets.only(
+                              top: 7,
+                              left: 5,
+                              bottom: 7,
+                              right: 5,
+                            ),
                             decoration: BoxDecoration(
-                                color: pinkColor, shape: BoxShape.circle),
+                              color: pinkColor,
+                              shape: BoxShape.rectangle,
+                            ),
                             child: Text(
-                              item.package!.displayDiscount
-                                  !.replaceAll(" ", "\n"),
+                              item.package!.displayDiscount!.replaceAll(
+                                " ",
+                                "\n",
+                              ),
                               textAlign: TextAlign.center,
                               maxLines: 2,
                               softWrap: true,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 10),
-                            )),
-                    ],
-                  )),
-              Expanded(
-                  flex: 7,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 8,
-                              child: Column(
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 12,
+                                height: 0.7,
+                                fontFamily: 'Chantal',
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 7,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 8,
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     if (item.freeDescription != null)
-                                      Text(item.freeDescription!,
-                                          style: TextStyle(
-                                              color: pinkColor,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
-                                    Text(item.product!.brand!,
+                                      Text(
+                                        item.freeDescription!,
                                         style: TextStyle(
-                                            color: packageColor, fontSize: 14)),
-                                    Text(item.product!.name!,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600))
-                                  ]),
-                            ),
-                            item.extra!
-                                ? SizedBox(width: 1)
-                                : Expanded(
-                                    flex: 2,
-                                    child: Align(
+                                          color: pinkColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    Text(
+                                      item.product!.brand!,
+                                      style: TextStyle(
+                                        color: packageColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Text(
+                                      item.product!.name!,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                  ],
+                                ),
+                              ),
+                              item.extra!
+                                  ? SizedBox(width: 1)
+                                  : Expanded(
+                                      flex: 2,
+                                      child: Align(
                                         alignment: Alignment.centerRight,
                                         child: IconButton(
-                                            icon: Icon(Icons.delete,
-                                                color: darkGrey),
-                                            onPressed: () => showDialog(
-                                                  context: context,
-                                                  builder: (_) =>
-                                                      DeleteItem(item: item),
-                                                  barrierDismissible: false,
-                                                ))),
-                                  ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          height: 35,
-                          width: 60,
-                          margin: EdgeInsets.only(right: 5),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: packageColor, width: 1),
-                            borderRadius: BorderRadius.circular(5),
+                                          icon: Icon(
+                                            Icons.delete,
+                                            color: darkGrey,
+                                          ),
+                                          onPressed: () => showDialog(
+                                            context: context,
+                                            builder: (_) =>
+                                                DeleteItem(item: item),
+                                            barrierDismissible: false,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                            ],
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              item.package!.name!,
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 10, color: packageColor),
+                          Container(
+                            height: 26,
+                            width: 50,
+                            margin: EdgeInsets.only(right: 5),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: packageColor, width: 1),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                item.package!.name!,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: packageColor,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        item.extra!
-                            ? Text("Added : ${item.quantity} Free Qty",
-                                style:
-                                    TextStyle(fontSize: 20, color: pinkColor))
-                            : Row(
-                                children: [
-                                  Expanded(
-                                    flex: 5,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (item.package!.displayDiscount !=
-                                            null)
-                                          Text(
-                                            "MRP: ${item.package!.price}",
-                                            style: TextStyle(
-                                                fontSize: 16,
+                          SizedBox(height: 5),
+                          item.extra!
+                              ? Text(
+                                  "Added : ${item.quantity} Free Qty",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: pinkColor,
+                                  ),
+                                )
+                              : Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (item.package!.displayDiscount !=
+                                              null)
+                                            Text(
+                                              "MRP: ${item.package!.price}",
+                                              style: TextStyle(
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.w400,
                                                 color: Colors.black,
-                                                decoration: TextDecoration
-                                                    .lineThrough),
-                                          ),
-                                        Text(
-                                          "Rs: ${item.package!.displayPrice}",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black),
-                                        ),
-                                      ],
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                height: 1,
+                                              ),
+                                            ),
+                                          if (item.flashSale!)
+                                            Text(
+                                              "Rs: ${item.package!.flashSalePrice}",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black,
+                                                height: 1,
+                                              ),
+                                            )
+                                          else
+                                            Text(
+                                              "Rs: ${item.package!.displayPrice}",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
+                                    Expanded(
                                       flex: 3,
                                       child: Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: GestureDetector(
-                                                    child: Container(
-                                                        height: 38,
-                                                        padding: ptb10,
-                                                        decoration:
-                                                            cartLeftButton,
-                                                        child: Icon(
-                                                            Icons.remove,
-                                                            color: whiteColor,
-                                                            size: 15)),
-                                                    onTap: () => controller
-                                                        .removeCartItem(
-                                                            item.product!.id,
-                                                            item.package,
-                                                            quantityController)),
+                                        alignment: Alignment.centerRight,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: GestureDetector(
+                                                child: Container(
+                                                  height: 38,
+                                                  padding: ptb10,
+                                                  decoration: cartLeftButton,
+                                                  child: Icon(
+                                                    Icons.remove,
+                                                    color: whiteColor,
+                                                    size: 15,
+                                                  ),
+                                                ),
+                                                onTap: () =>
+                                                    controller.removeCartItem(
+                                                      item.product!.id,
+                                                      item.package,
+                                                      quantityController,
+                                                    ),
                                               ),
-                                              Expanded(
-                                                  child: Container(
+                                            ),
+                                            Expanded(
+                                              child: Container(
                                                 height: 38,
                                                 padding: ptb10,
                                                 color: pinkColor,
                                                 child: TextField(
-                                                    enableInteractiveSelection:
-                                                        false,
-                                                    style: TextStyle(
-                                                        color: whiteColor),
-                                                    textAlign: TextAlign.center,
-                                                    readOnly: true,
-                                                    controller:
-                                                        quantityController,
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                            hintText: "1")),
-                                              )),
-                                              Expanded(
-                                                child: GestureDetector(
-                                                    child: Container(
-                                                        height: 38,
-                                                        padding: ptb10,
-                                                        decoration:
-                                                            cartRightButton,
-                                                        child: Icon(Icons.add,
-                                                            color: whiteColor,
-                                                            size: 15)),
-                                                    onTap: () =>
-                                                        controller.addCartItem(
-                                                            item.product!.id,
-                                                            item.package,
-                                                            quantityController)),
+                                                  enableInteractiveSelection:
+                                                      false,
+                                                  style: TextStyle(
+                                                    color: whiteColor,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  readOnly: true,
+                                                  controller:
+                                                      quantityController,
+                                                  decoration:
+                                                      InputDecoration.collapsed(
+                                                        hintText: "1",
+                                                      ),
+                                                ),
                                               ),
-                                            ],
-                                          )))
-                                ],
-                              ),
-                      ],
+                                            ),
+                                            Expanded(
+                                              child: GestureDetector(
+                                                child: Container(
+                                                  height: 38,
+                                                  padding: ptb10,
+                                                  decoration: cartRightButton,
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    color: whiteColor,
+                                                    size: 15,
+                                                  ),
+                                                ),
+                                                onTap: () =>
+                                                    controller.addCartItem(
+                                                      item.product!.id,
+                                                      item.package,
+                                                      quantityController,
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ],
+                      ),
                     ),
-                  ))
-            ]),
-            // Image.asset(
-            //     item.veg ? 'assets/images/veg.png' : 'assets/images/nonVeg.png',
-            //     height: 10)
-          ],
-        ));
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        onLeftSwipe: (DragUpdateDetails details) => showDialog(
+          context: context,
+          builder: (_) => DeleteItem(item: item),
+          barrierDismissible: false,
+        ),
+      ),
+    );
   }
 }
 
@@ -560,16 +700,20 @@ class DeleteItem extends StatelessWidget {
       ),
       actions: [
         SizedBox(
-            width: MediaQuery.of(context).size.width * .4,
-            child: ElevatedButton(
-                style: customElevatedButton(pinkColor, whiteColor),
-                child: Text('YES'),
-                onPressed: () => controller.deleteItem(item.id))),
+          width: MediaQuery.of(context).size.width * .4,
+          child: ElevatedButton(
+            style: customElevatedButton(pinkColor, whiteColor),
+            child: Text('YES'),
+            onPressed: () => controller.deleteItem(item.id),
+          ),
+        ),
         SizedBox(
-            width: MediaQuery.of(context).size.width * .4,
-            child: ElevatedButton(
-                child: Text('NO'),
-                onPressed: () => Navigator.of(context).pop())),
+          width: MediaQuery.of(context).size.width * .4,
+          child: ElevatedButton(
+            child: Text('NO'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
       ],
     );
   }
@@ -591,16 +735,20 @@ class EmptyCart extends StatelessWidget {
       ),
       actions: [
         SizedBox(
-            width: MediaQuery.of(context).size.width * .4,
-            child: ElevatedButton(
-                style: customElevatedButton(pinkColor, whiteColor),
-                child: Text('YES'),
-                onPressed: () => controller.emptyCart())),
+          width: MediaQuery.of(context).size.width * .4,
+          child: ElevatedButton(
+            style: customElevatedButton(pinkColor, whiteColor),
+            child: Text('YES'),
+            onPressed: () => controller.emptyCart(),
+          ),
+        ),
         SizedBox(
-            width: MediaQuery.of(context).size.width * .4,
-            child: ElevatedButton(
-                child: Text('NO'),
-                onPressed: () => Navigator.of(context).pop())),
+          width: MediaQuery.of(context).size.width * .4,
+          child: ElevatedButton(
+            child: Text('NO'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
       ],
     );
   }
@@ -619,15 +767,19 @@ class EmptyCartValidation extends StatelessWidget {
         children: [
           Image.asset('assets/images/exclamation.png', height: 60),
           SizedBox(height: 20),
-          Text('Your Cart is empty please add item into your cart to proceed',
-              textAlign: TextAlign.center),
+          Text(
+            'Your Cart is empty please add item into your cart to proceed',
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 20),
           SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                  style: customElevatedButton(pinkColor, whiteColor),
-                  child: Text('ADD ITEMS'),
-                  onPressed: () => Navigator.pushNamed(context, "/"))),
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              style: customElevatedButton(pinkColor, whiteColor),
+              child: Text('ADD ITEMS'),
+              onPressed: () => Navigator.pushNamed(context, "/"),
+            ),
+          ),
         ],
       ),
     );
@@ -653,11 +805,13 @@ class MinimumAmount extends StatelessWidget {
           ),
           SizedBox(height: 20),
           SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                  style: customElevatedButton(pinkColor, whiteColor),
-                  child: Text('ADD ITEMS'),
-                  onPressed: () => Navigator.pushNamed(context, "/"))),
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              style: customElevatedButton(pinkColor, whiteColor),
+              child: Text('ADD ITEMS'),
+              onPressed: () => Navigator.pushNamed(context, "/"),
+            ),
+          ),
           Text("*Excluding Delivery Fees", style: TextStyle(color: pinkColor)),
         ],
       ),
@@ -685,16 +839,18 @@ class AddAddress extends StatelessWidget {
           ),
           SizedBox(height: 20),
           SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                  style: customElevatedButton(pinkColor, whiteColor),
-                  child: Text('OK'),
-                  onPressed: () {
-                    Get.close(1);
-                    Navigator.pushNamed(context, "/add-address").then((_) {
-                      controller.apicall(controller.uuid);
-                    });
-                  })),
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              style: customElevatedButton(pinkColor, whiteColor),
+              child: Text('OK'),
+              onPressed: () {
+                Get.close(1);
+                Navigator.pushNamed(context, "/add-address").then((_) {
+                  controller.apicall(controller.uuid);
+                });
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -703,7 +859,7 @@ class AddAddress extends StatelessWidget {
 
 class InactiveItems extends StatelessWidget {
   final Map data;
-  const InactiveItems({super.key,  required this.data});
+  const InactiveItems({super.key, required this.data});
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -714,17 +870,16 @@ class InactiveItems extends StatelessWidget {
         children: [
           Image.asset('assets/images/exclamation.png', height: 60),
           SizedBox(height: 20),
-          Text(
-            '${data['message']}',
-            textAlign: TextAlign.center,
-          ),
+          Text('${data['message']}', textAlign: TextAlign.center),
           SizedBox(height: 20),
           SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                  style: customElevatedButton(pinkColor, whiteColor),
-                  child: Text('OK'),
-                  onPressed: () => Navigator.of(context).pop())),
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              style: customElevatedButton(pinkColor, whiteColor),
+              child: Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
         ],
       ),
     );

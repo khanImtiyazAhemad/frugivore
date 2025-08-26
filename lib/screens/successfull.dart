@@ -45,6 +45,7 @@ class SuccessfullPage extends StatelessWidget {
                                       Card(
                                           margin: plr10,
                                           shape: roundedCircularRadius,
+                                          color: whiteColor,
                                           child: Padding(
                                               padding: p10,
                                               child: SizedBox(
@@ -109,6 +110,7 @@ class SuccessfullPage extends StatelessWidget {
                                                                 color:
                                                                     primaryColor,
                                                                 fontSize: 16,
+                                                                height: 1,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold),
@@ -174,6 +176,7 @@ class SuccessfullPage extends StatelessWidget {
                                                                 color:
                                                                     primaryColor,
                                                                 fontSize: 16,
+                                                                height: 1,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold),

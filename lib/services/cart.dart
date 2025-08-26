@@ -15,8 +15,10 @@ class Services {
     Map<String, String>? headers = await utils.getHeaders();
 
     try {
-      final response =
-          await client.get(Uri.parse("${url}cart"), headers: headers);
+      final response = await client.get(
+        Uri.parse("${url}cart"),
+        headers: headers,
+      );
       final jsonResponse = json.decode(response.body);
       globals.payload['cart'] = jsonResponse['count'].toString();
       // print("Response $jsonResponse");
@@ -35,8 +37,11 @@ class Services {
     Map<String, String>? headers = await utils.getHeaders();
 
     try {
-      final response = await client.post(Uri.parse("${url}non-logged-in-cart"),
-          headers: headers, body: json.encode(data));
+      final response = await client.post(
+        Uri.parse("${url}non-logged-in-cart"),
+        headers: headers,
+        body: json.encode(data),
+      );
       final jsonResponse = json.decode(response.body);
       globals.payload['cart'] = jsonResponse['count'].toString();
       // print("Response $jsonResponse");
@@ -55,8 +60,10 @@ class Services {
     Map<String, String>? headers = await utils.getHeaders();
 
     try {
-      final response =
-          await client.get(Uri.parse("${url}empty-cart"), headers: headers);
+      final response = await client.get(
+        Uri.parse("${url}empty-cart"),
+        headers: headers,
+      );
       final jsonResponse = json.decode(response.body);
       globals.payload['cart'] = "0";
       globals.payload.refresh();
@@ -74,10 +81,12 @@ class Services {
     Map<String, String>? headers = await utils.getHeaders();
 
     try {
-      final response = await client.get(Uri.parse("${url}cart-validation"),
-          headers: headers);
+      final response = await client.get(
+        Uri.parse("${url}cart-validation"),
+        headers: headers,
+      );
       final jsonResponse = json.decode(response.body);
-      // print("Response $jsonResponse");
+      print("Response $jsonResponse");
       if (response.statusCode == 200) {
         return jsonResponse;
       } else if (response.statusCode == 400) {
@@ -88,25 +97,51 @@ class Services {
     }
   }
 
-    static Future<List<DeliveryInstructionModel>>?
-      fetchDeliveryInstruction() async {
+  static Future orderCreation(data) async {
+    Map<String, String>? headers = await utils.getHeaders();
+    try {
+      final response = await client.post(
+        Uri.parse("${url}order-creation"),
+        headers: headers,
+        body: json.encode(data),
+      );
+      final jsonResponse = json.decode(response.body);
+      // print("Response $jsonResponse");
+      if (response.statusCode == 200) {
+        return jsonResponse;
+      } else {
+        throw Exception(jsonResponse['message']);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  static Future<List<DeliveryInstructionModel>>?
+  fetchDeliveryInstruction() async {
     Map<String, String>? headers = await utils.getHeaders();
     try {
       final response = await client.get(
         Uri.parse("${url}delivery-instruction"),
         headers: headers,
       );
-      List<DeliveryInstructionModel> list = parseDeliveryInstructionList(response.body);
+      List<DeliveryInstructionModel> list = parseDeliveryInstructionList(
+        response.body,
+      );
       return list;
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-    static List<DeliveryInstructionModel> parseDeliveryInstructionList(String responseBody) {
+  static List<DeliveryInstructionModel> parseDeliveryInstructionList(
+    String responseBody,
+  ) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed
-        .map<DeliveryInstructionModel>((json) => DeliveryInstructionModel.fromJson(json))
+        .map<DeliveryInstructionModel>(
+          (json) => DeliveryInstructionModel.fromJson(json),
+        )
         .toList();
   }
 }

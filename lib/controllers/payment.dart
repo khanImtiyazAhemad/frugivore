@@ -101,6 +101,7 @@ class PaymentController extends GetxController {
     var response = await Services.placedWalletOrder(uuid!);
     if (response != null) {
       // Get.reset();
+      globals.payload['cart'] = "0";
       Navigator.pushNamedAndRemoveUntil(
           Get.context!, "/successfull/${response['uuid']}", (route) => false);
     }
@@ -111,7 +112,7 @@ class PaymentController extends GetxController {
     var response = await Services.razorpayOrder(payload);
     if (response != null) {
       var options = {
-        'key': globals.RAZOR_API_KEY,
+        'key': globals.razorApiKey,
         'amount': netPayable.value * 100,
         "name": "Frugviore India Pvt Ltd",
         "description": "Secure Payment Page",
@@ -144,6 +145,7 @@ class PaymentController extends GetxController {
     } else {
       // Get.reset();
       timer.cancel();
+      globals.payload['cart'] = "0";
       Navigator.pushNamedAndRemoveUntil(
           Get.context!, "/successfull/${response['uuid']}", (route) => false);
     }

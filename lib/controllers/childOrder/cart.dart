@@ -1,6 +1,8 @@
+import 'package:frugivore/widgets/custom.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:intl/intl.dart';
 
 import 'package:frugivore/globals.dart' as globals;
 
@@ -21,9 +23,19 @@ class ChildCartController extends GetxController {
   var total = "".obs;
   var canEndorse = true.obs;
   var canChildOrder = true.obs;
+  var activeDeliveryInstruction = 0.obs;
+  var activeDeliveryInstructionText = "".obs;
+  var showTimeContainer = false.obs;
+  var timeContainerTitle = "Change".obs;
+  var selectedNormalTimeSlot = "".obs;
+  var selectedTimeSlotTitle = "".obs;
+  var activeNormalDateRecord = "".obs;
 
-  RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  String? defaultAddress;
+
+  RefreshController refreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   final _cart = ChildCartModel().obs;
   ChildCartModel get cart => _cart.value;
@@ -41,6 +53,11 @@ class ChildCartController extends GetxController {
     apicall(uuid);
   }
 
+  String parseDateTime(input) {
+    DateTime date = DateFormat("dd-MMM-yyyy").parse(input);
+    return DateFormat("MMM dd,yyyy").format(date);
+  }
+
   void apicall(uuid) async {
     try {
       isLoader(true);
@@ -52,6 +69,10 @@ class ChildCartController extends GetxController {
         deliveryFee(response.deliveryFee.toString());
         subTotal(response.subTotal.toString());
         total(response.total.toString());
+        activeNormalDateRecord(response.deliveryDate);
+        selectedTimeSlotTitle(response.deliverySlotTitle);
+        selectedNormalTimeSlot(response.deliverySlotId.toString());
+        defaultAddress = response.address!.id.toString();
       }
     } finally {
       isLoader(false);
@@ -67,9 +88,12 @@ class ChildCartController extends GetxController {
 
   void removeCartItem(product, package, quantity) async {
     quantity.text = (int.parse(quantity.text) - 1).toString();
-  
+
     var response = await UtilsServices.updateCart(
-        product, package.id.toString(), quantity.text);
+      product,
+      package.id.toString(),
+      quantity.text,
+    );
     if (response != null) {
       if (response['apicall']) {
         apicall(uuid);
@@ -100,9 +124,11 @@ class ChildCartController extends GetxController {
     }
     quantity.text = addQuantity.toString();
 
-
     var response = await UtilsServices.updateCart(
-        product, package.id.toString(), quantity.text);
+      product,
+      package.id.toString(),
+      quantity.text,
+    );
     if (response != null) {
       if (response['apicall']) {
         apicall(uuid);
@@ -129,24 +155,6 @@ class ChildCartController extends GetxController {
           builder: (_) => EmptyCartValidation(),
           barrierDismissible: false,
         );
-      } else if (response['popup'] == "Minimum Amount") {
-        showDialog(
-          context: Get.context!,
-          builder: (_) => MinimumAmount(data: response),
-          barrierDismissible: false,
-        );
-      } else if (response['popup'] == "Maximum Amount") {
-        showDialog(
-          context: Get.context!,
-          builder: (_) => MinimumAmount(data: response),
-          barrierDismissible: false,
-        );
-      } else if (response['popup'] == "Address") {
-        showDialog(
-          context: Get.context!,
-          builder: (_) => AddAddress(),
-          barrierDismissible: false,
-        );
       } else if (response['popup'] == "Inactive") {
         showDialog(
           context: Get.context!,
@@ -155,11 +163,17 @@ class ChildCartController extends GetxController {
         );
       }
     } else {
-      if (vendor.value) {
-        Navigator.pushNamed(Get.context!, '/vendors',
-            arguments: ['/child-order-review/$uuid']);
-      } else {
-        Navigator.pushNamed(Get.context!, '/child-order-review/$uuid');
+      Map<String, dynamic> data = {"delivery_address": defaultAddress};
+      data["delivery_date"] = activeNormalDateRecord.value;
+      data["delivery_time"] = selectedNormalTimeSlot.value;
+      data["instruction"] = "";
+      isLoader(true);
+      var response = await Services.orderCreation(uuid, data);
+      if (response != null) {
+        Navigator.pushReplacementNamed(
+          Get.context!,
+          '/payment/${response['uuid']}',
+        );
       }
     }
   }
@@ -179,5 +193,4 @@ class ChildCartController extends GetxController {
     apicall(uuid);
     refreshController.loadComplete();
   }
-
 }

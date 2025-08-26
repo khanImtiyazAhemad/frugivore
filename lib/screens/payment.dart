@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:frugivore/globals.dart' as globals;
 
 import 'package:frugivore/widgets/loader.dart';
 import 'package:frugivore/widgets/custom.dart';
@@ -61,19 +62,19 @@ class PaymentPage extends StatelessWidget {
                                             "Order will be delivered at:",
                                             style: TextStyle(
                                                 color: whiteColor,
-                                                fontSize: 14),
+                                                fontSize: 14, height: 1),
                                           ),
                                           Text(
                                             "${controller.data.deliveryAddress}",
                                             style: TextStyle(
                                                 color: whiteColor,
-                                                fontSize: 14),
+                                                fontSize: 14, height: 1),
                                           ),
                                           Text(
                                             "Delivered on : ${controller.data.deliveryDate}",
                                             style: TextStyle(
                                                 color: whiteColor,
-                                                fontSize: 14),
+                                                fontSize: 14, height: 1),
                                           ),
                                         ],
                                       ),
@@ -82,6 +83,7 @@ class PaymentPage extends StatelessWidget {
                                   SizedBox(height: 10),
                                   Card(
                                       margin: plr10,
+                                      color: whiteColor,
                                       shape: roundedCircularRadius,
                                       child: Padding(
                                           padding: p10,
@@ -126,6 +128,7 @@ class PaymentPage extends StatelessWidget {
                                   SizedBox(height: 10),
                                   Card(
                                       margin: plr10,
+                                      color: whiteColor,
                                       shape: roundedCircularRadius,
                                       child: Padding(
                                           padding: p10,
@@ -393,6 +396,7 @@ class PaymentPage extends StatelessWidget {
                                   SizedBox(height: 10),
                                   Card(
                                       margin: plr10,
+                                      color: whiteColor,
                                       shape: roundedCircularRadius,
                                       child: Padding(
                                           padding: p10,
@@ -580,6 +584,7 @@ class PaymentPage extends StatelessWidget {
                                   SizedBox(height: 10),
                                   if (controller.netPayable.value != 0)
                                     Card(
+                                      color: whiteColor,
                                         margin: plr10,
                                         shape: roundedCircularRadius,
                                         child: Padding(
@@ -658,6 +663,7 @@ class PaymentOptionStrip extends StatelessWidget {
             controller.timer.cancel();
             // Navigator.pushNamed(context, '/order-otp/${controller.uuid}',
             //     arguments: [controller.wallet.value]);
+            globals.payload['cart'] = "0";
             Navigator.pushNamed(context, '/successfull/${controller.uuid}');
           }
         });

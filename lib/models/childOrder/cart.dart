@@ -23,6 +23,9 @@ class ChildCartModel {
     String? message;
     int? count;
     bool? vendor;
+    String? deliveryDate;
+    String? deliverySlotTitle;
+    int? deliverySlotId;
 
     ChildCartModel({
         this.address,
@@ -36,6 +39,9 @@ class ChildCartModel {
         this.message,
         this.count,
         this.vendor,
+        this.deliveryDate,
+        this.deliverySlotTitle,
+        this.deliverySlotId
     });
 
     factory ChildCartModel.fromJson(Map<String, dynamic> json) => ChildCartModel(
@@ -50,6 +56,9 @@ class ChildCartModel {
         message: json["message"],
         count: json["count"],
         vendor: json["vendor"],
+        deliveryDate: json["delivery_date"],
+        deliverySlotTitle: json["delivery_slot_title"],
+        deliverySlotId: json["delivery_slot_id"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -64,6 +73,9 @@ class ChildCartModel {
         "message": message,
         "count": count,
         "vendor": vendor,
+        "delivery_date": deliveryDate,
+        "delivery_slot_title": deliverySlotTitle,
+        "delivery_slot_id": deliverySlotId
     };
 }
 

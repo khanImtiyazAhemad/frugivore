@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+import 'package:intl/intl.dart';
 import 'package:frugivore/globals.dart' as globals;
 
 import 'package:frugivore/models/cart.dart';
@@ -21,11 +21,18 @@ class CartController extends GetxController {
   var deliveryFee = "".obs;
   var subTotal = "".obs;
   var total = "".obs;
+  var usedWallet = "".obs;
   var canEndorse = true.obs;
   var canChildOrder = true.obs;
   var vendor = false.obs;
   var activeDeliveryInstruction = 0.obs;
   var activeDeliveryInstructionText = "".obs;
+  var showTimeContainer = false.obs;
+  var timeContainerTitle = "Change".obs;
+  var selectedNormalTimeSlot = "".obs;
+  var selectedTimeSlotTitle = "".obs;
+  String? defaultAddress;
+
 
   RefreshController refreshController = RefreshController(
     initialRefresh: false,
@@ -35,9 +42,17 @@ class CartController extends GetxController {
   CartModel get cart => _cart.value;
   set cart(value) => _cart.value = value;
 
+  final _activeNormalDateRecord = DateRecord().obs;
+  DateRecord get activeNormalDateRecord => _activeNormalDateRecord.value;
+  set activeNormalDateRecord(value) => _activeNormalDateRecord.value = value;
+
+  final activeNormalTimeRecord = List<Time>.empty(growable: true).obs;
+
   final deliveryInstruction = List<DeliveryInstructionModel>.empty(
     growable: true,
   ).obs;
+
+  String selectedDeliveryType = "";
 
   void emptyCart() async {
     await Services.emptyCart();
@@ -49,6 +64,21 @@ class CartController extends GetxController {
     await UtilsServices.deleteItem(id);
     Get.close(1);
     apicall();
+  }
+
+  void showHideTimeContainer() async {
+    if (showTimeContainer.value == true) {
+      showTimeContainer(false);
+      timeContainerTitle("Change");
+    } else {
+      showTimeContainer(true);
+      timeContainerTitle("Hide");
+    }
+  }
+
+  String parseDateTime(input) {
+    DateTime date = DateFormat("dd-MMM-yyyy").parse(input);
+    return DateFormat("MMM dd,yyyy").format(date);
   }
 
   void apicall() async {
@@ -63,6 +93,24 @@ class CartController extends GetxController {
         deliveryFee(response.deliveryFee.toString());
         subTotal(response.subTotal.toString());
         total(response.total.toString());
+        usedWallet(response.usedWallet.toString());
+        selectedNormalTimeSlot(response.deliverySlot!.id.toString());
+        selectedTimeSlotTitle(response.deliverySlot!.title);
+        defaultAddress = response.address!.id.toString();
+        for (DateRecord item in response.dateRecords!) {
+          if (item.checked! && activeNormalDateRecord.value == null) {
+            activeNormalDateRecord = item;
+            activeNormalTimeRecord.assignAll(item.time!);
+            selectedNormalTimeSlot("");
+            for (Time time in item.time!) {
+              if (selectedNormalTimeSlot.value == "" && !time.disable!) {
+                selectedNormalTimeSlot(time.id.toString());
+                break;
+              }
+            }
+            break;
+          }
+        }
         globals.payload['cart'] = response.count.toString();
         globals.payload.refresh();
         if (Get.currentRoute.contains('/cart') &&
@@ -117,6 +165,7 @@ class CartController extends GetxController {
         deliveryFee(response['delivery_fee'].toString());
         subTotal(response['sub_total'].toString());
         total(response['total'].toString());
+        usedWallet(response['used_wallet'].toString());
         globals.toast(response['message'], color: primaryColor);
       }
     }
@@ -152,6 +201,7 @@ class CartController extends GetxController {
         deliveryFee(response['delivery_fee'].toString());
         subTotal(response['sub_total'].toString());
         total(response['total'].toString());
+        usedWallet(response['used_wallet'].toString());
         globals.toast(response['message'], color: primaryColor);
       }
     }
@@ -223,17 +273,25 @@ class CartController extends GetxController {
             barrierDismissible: true,
           );
         } else {
-          if (vendor.value) {
-            Navigator.pushNamed(
+          Map<String, dynamic> data = {"delivery_address": defaultAddress};
+          if (selectedNormalTimeSlot.value == "") {
+            globals.toast("Please select a valid date and time");
+            return;
+          }
+          data["order_type"] = activeNormalDateRecord.orderType ?? "";
+          data["delivery_date"] = activeNormalDateRecord.value;
+          data["delivery_time"] = selectedNormalTimeSlot.value;
+          data["instruction"] = "";
+          data["delivery_instruction"] = activeDeliveryInstruction.value != 0
+              ? activeDeliveryInstructionText.value
+              : "";
+          isLoader(true);
+          var response = await Services.orderCreation(data);
+          if (response != null) {
+            Navigator.pushReplacementNamed(
               Get.context!,
-              '/vendors',
-              arguments: ['/order-review'],
+              '/payment/${response['uuid']}',
             );
-          } else {
-            Navigator.pushNamed(
-              Get.context!,
-              '/order-review',
-            ).then((value) => apicall());
           }
         }
       }

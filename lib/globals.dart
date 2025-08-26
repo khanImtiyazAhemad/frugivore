@@ -34,15 +34,15 @@ RxMap titles = {
   "blogs" : {"title": "Engage", "heading": ""},
 }.obs;
 
-const String baseuri = "http://localhost:8000/";
-// const String baseuri = "https://api.frugivore.in/";
+// const String baseuri = "http://localhost:8000/";
+const String baseuri = "https://api.frugivore.in/";
 // const String baseuri = "https://staging.frugivore.in/";
 const String webUri = "https://frugivore.in/";
 
-const String backenduri = "api/v2/";
+const String backenduri = "api/v3/";
 
 // const String RAZOR_API_KEY = "rzp_test_aoomjIiMSQHjTp";
-const String RAZOR_API_KEY = "rzp_live_DrrKfu6b2nBSqe";
+const String razorApiKey = "rzp_live_DrrKfu6b2nBSqe";
 
 List cities = [
   "Faridabad",

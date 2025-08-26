@@ -78,6 +78,7 @@ class HomePage extends StatelessWidget {
                               ),
                             Card(
                               shadowColor: Colors.transparent,
+                              color: whiteColor,
                               margin: p10,
                               shape: roundedCircularRadius,
                               child: Padding(
@@ -221,6 +222,7 @@ class HomePage extends StatelessWidget {
                                     shadowColor: Colors.transparent,
                                     margin: plr10,
                                     shape: shapeRoundedRectangleBorderBLR,
+                                    color: whiteColor,
                                     child: Column(
                                       children: [
                                         Image.asset(
@@ -591,6 +593,7 @@ class RateUsOrderState extends State<RateUsOrder> {
         shadowColor: Colors.transparent,
         margin: ptlr10,
         shape: roundedCircularRadius,
+        color: whiteColor,
         child: Column(
           children: [
             Container(
