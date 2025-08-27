@@ -44,6 +44,7 @@ class AddAddressPage extends StatelessWidget {
                                                                           CustomTitleBar(
                                       title: "Add Address", search: false),
                                                                           Card(
+                                                                            color: whiteColor,
                                       margin: plr10,
                                       shape: roundedCircularRadius,
                                       child: Padding(
@@ -172,7 +173,7 @@ class AddAddressPage extends StatelessWidget {
                                                                 children: [
                                                               controller
                                                                   .inputText(
-                                                                      "Alternate Phone Number"),
+                                                                      "Alternate Number"),
                                                               Row(
                                                                   children: [
                                                                     Container(
@@ -190,7 +191,7 @@ class AddAddressPage extends StatelessWidget {
                                                                         decoration:
                                                                             shapeDecoration,
                                                                         child:
-                                                                            TextField(controller: controller.alternatePhoneNumber, style:TextStyle(fontSize: 12),  decoration: controller.inputDecoration("Alternate Phone Number")))
+                                                                            TextField(controller: controller.alternatePhoneNumber, style:TextStyle(fontSize: 12),  decoration: controller.inputDecoration("Alternate Number")))
                                                                   ])
                                                             ]))
                                                       ],

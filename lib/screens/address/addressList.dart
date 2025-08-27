@@ -44,6 +44,7 @@ class AddressListPage extends StatelessWidget {
                                       margin: EdgeInsets.only(top: 10),
                                       child: Column(children: [
                                         Card(
+                                          color: whiteColor,
                                             margin: plr10,
                                             shape: roundedCircularRadius,
                                             child: Padding(
@@ -170,6 +171,7 @@ class DeleteAddress extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(AddressListController());
     return AlertDialog(
+      backgroundColor: whiteColor,
       insetPadding: EdgeInsets.all(10),
       actionsPadding: EdgeInsets.all(10),
       title: Text('Delete Address', textAlign: TextAlign.center),
@@ -187,6 +189,7 @@ class DeleteAddress extends StatelessWidget {
         SizedBox(
             width: MediaQuery.of(context).size.width * .4,
             child: ElevatedButton(
+                style: customElevatedButton(darkGrey, whiteColor),
                 child: Text('NO'),
                 onPressed: () => Navigator.of(context).pop())),
       ],

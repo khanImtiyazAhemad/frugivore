@@ -472,17 +472,21 @@ class CartRouting {
   Future<void> routing() async {
     if (box.hasData('token')) {
       var response = await UtilsServices.cartHasPreOrderItem();
-      if (response['status']) {
-        Navigator.pushNamedAndRemoveUntil(
+      print(response);
+      if (!response['address']){
+        Navigator.pushNamed(
+          Get.context!,
+          "/add-address",
+        );
+      } else if (response['status']) {
+        Navigator.pushNamed(
           Get.context!,
           "/pre-order",
-          (route) => false,
         );
-      } else {
-        Navigator.pushNamedAndRemoveUntil(
+      } else if (!response['status']) {
+        Navigator.pushNamed(
           Get.context!,
           "/cart",
-          (route) => false,
         );
       }
     } else {
