@@ -152,7 +152,7 @@ class CartPage extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              "Order will be deliverer on:",
+                                              "Order will be deliver on:",
                                               style: TextStyle(
                                                 height: 1,
                                                 fontSize: 13,
@@ -738,6 +738,7 @@ class CartProductCard extends StatelessWidget {
                                 item.package!.name!,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
+                                  height: 1,
                                   fontSize: 10,
                                   color: packageColor,
                                 ),

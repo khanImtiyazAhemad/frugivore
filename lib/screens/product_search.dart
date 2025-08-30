@@ -64,6 +64,7 @@ class ProductSearchPage extends StatelessWidget {
                                         
                                         TitleCard(title: "Search Results"),
                                         Card(
+                                            color: whiteColor,
                                             shadowColor: Colors.transparent,
                                             margin: plr10,
                                             shape:

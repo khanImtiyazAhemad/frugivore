@@ -66,7 +66,7 @@ class CustomSearchBarState extends State<CustomSearchBar> {
                 return index == 0 && suggestion.recentPurchase != null
                     ? Container(
                         padding: plr15,
-                        decoration: boxDecorationBottomBorder,
+                        decoration: boxDecorationBottomBorder.copyWith(color: whiteColor),
                         child: ListTile(
                           visualDensity:
                               VisualDensity(horizontal: 0, vertical: -4),
@@ -107,7 +107,7 @@ class CustomSearchBarState extends State<CustomSearchBar> {
                         ))
                     : Container(
                         padding: plr15,
-                        decoration: boxDecorationBottomBorder,
+                        decoration: boxDecorationBottomBorder.copyWith(color: whiteColor),
                         child: ListTile(
                           visualDensity:
                               VisualDensity(horizontal: 0, vertical: -4),

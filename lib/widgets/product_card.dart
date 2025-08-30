@@ -193,6 +193,7 @@ class ProductCardState extends State<ProductCard> {
                                                 packageItem.name!,
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
+                                                  height: 1,
                                                   fontSize: 10,
                                                   color:
                                                       widget.activePackage.id ==
@@ -794,7 +795,12 @@ class SliderProductCardState extends State<SliderProductCard> {
                         Expanded(
                           flex: 1,
                           child: Container(
-                            padding: EdgeInsets.only(top: 7, left: 5, bottom: 7, right: 5),
+                            padding: EdgeInsets.only(
+                              top: 7,
+                              left: 5,
+                              bottom: 7,
+                              right: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: pinkColor,
                               shape: BoxShape.rectangle,
@@ -892,6 +898,7 @@ class SliderProductCardState extends State<SliderProductCard> {
                         item.name!,
                         textAlign: TextAlign.center,
                         style: TextStyle(
+                          height: 1,
                           fontSize: 10,
                           color: widget.activePackage!.id == item.id
                               ? packageColor
@@ -974,8 +981,9 @@ class SliderProductCardState extends State<SliderProductCard> {
                               ),
                               Expanded(
                                 child: Container(
-                                  padding: ptb5,
+                                  height: 28,
                                   color: pinkColor,
+                                  alignment: Alignment.center,
                                   child: TextField(
                                     enableInteractiveSelection: false,
                                     style: TextStyle(color: whiteColor),

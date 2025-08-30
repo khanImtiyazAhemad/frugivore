@@ -69,6 +69,7 @@ class ProductDetailPage extends StatelessWidget {
                                     Column(
                                       children: [
                                         Card(
+                                          color: whiteColor,
                                             margin: plr10,
                                             shape: roundedCircularRadius,
                                             child: Padding(

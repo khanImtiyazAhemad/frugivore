@@ -1390,6 +1390,7 @@ class FlashSaleSliderProductCardState
                       flex: 2,
                       child: widget.activePackage.userQuantity! > 0
                           ? Container(
+                            height: 30,
                               width: MediaQuery.of(context).size.width * .15,
                               color: whiteColor,
                               alignment: Alignment.centerRight,
@@ -1398,7 +1399,7 @@ class FlashSaleSliderProductCardState
                                   Expanded(
                                     child: GestureDetector(
                                       child: Container(
-                                        padding: ptb10,
+                                        padding: ptb5,
                                         decoration: cartLeftButton,
                                         child: Icon(
                                           Icons.remove,
@@ -1423,8 +1424,9 @@ class FlashSaleSliderProductCardState
                                   ),
                                   Expanded(
                                     child: Container(
-                                      padding: ptb10,
+                                      height: 28,
                                       color: pinkColor,
+                                      alignment: Alignment.center,
                                       child: TextField(
                                         enableInteractiveSelection: false,
                                         style: TextStyle(color: whiteColor),
@@ -1440,7 +1442,7 @@ class FlashSaleSliderProductCardState
                                   Expanded(
                                     child: GestureDetector(
                                       child: Container(
-                                        padding: ptb10,
+                                        padding: ptb5,
                                         decoration: cartRightButton,
                                         child: Icon(
                                           Icons.add,

@@ -52,15 +52,43 @@ class OrderTrackingPage extends StatelessWidget {
                                 .toUpperCase(),
                             search: false,
                           ),
-                          controller.data.deliveryBoyName != null &&
-                                  controller.data.deliveryBoyName!.isNotEmpty
-                              ? Card(
-                                  margin: plr10,
-                                  color: whiteColor,
-                                  shape: roundedCircularRadius,
-                                  child: Padding(
-                                    padding: p10,
-                                    child: Row(
+                          Card(
+                            margin: plr10,
+                            color: controller.data.orderStatus == "Cancelled"
+                                ? Colors.red
+                                : controller.data.orderStatus == "Delivered"
+                                ? darkGreen
+                                : whiteColor,
+                            shape: roundedCircularRadius,
+                            child: Container(
+                              padding: p10,
+                              width: MediaQuery.of(context).size.width * 1,
+                              child: controller.data.orderStatus == "Cancelled"
+                                  ? Text(
+                                      "Your order is cancelled",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: whiteColor,
+                                        fontSize: 16,
+                                        height: 1,
+                                      ),
+                                    )
+                                  : controller.data.orderStatus == "Delivered"
+                                  ? Text(
+                                      "Your order is delivered",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: whiteColor,
+                                        fontSize: 16,
+                                        height: 1,
+                                      ),
+                                    )
+                                  : controller.data.deliveryBoyName != null &&
+                                        controller
+                                            .data
+                                            .deliveryBoyName!
+                                            .isNotEmpty
+                                  ? Row(
                                       children: [
                                         Expanded(
                                           flex: 2,
@@ -126,21 +154,13 @@ class OrderTrackingPage extends StatelessWidget {
                                           ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                )
-                              : Card(
-                                  margin: plr10,
-                                  color: whiteColor,
-                                  shape: roundedCircularRadius,
-                                  child: Padding(
-                                    padding: p10,
-                                    child: Row(
-                                      children: [
+                                    )
+                                  : Row(children: [
                                         Expanded(
                                           flex: 2,
                                           child: Container(
                                             padding: p10,
+                                            alignment: Alignment.center,
                                             color: yellowColor,
                                             child: FaIcon(
                                               getIconFromCss(
@@ -155,7 +175,7 @@ class OrderTrackingPage extends StatelessWidget {
                                         Expanded(
                                           flex: 10,
                                           child: Text(
-                                            "We'll assign a delivery partner as soon as your order is processed",
+                                            "We'll assign a delivery partner as soon as your order is read",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontSize: 16,
@@ -165,8 +185,8 @@ class OrderTrackingPage extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
+                            ),
+                          ),
                           SizedBox(height: 10),
                           Card(
                             margin: plr10,
@@ -198,14 +218,14 @@ class OrderTrackingPage extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "You'r delivery details",
+                                              "Order details",
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 height: 1,
                                               ),
                                             ),
                                             Text(
-                                              "Details of your current order",
+                                              "Details of your order",
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 height: 1,

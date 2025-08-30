@@ -386,7 +386,7 @@ class ActiveOrdersNavigation extends StatelessWidget {
                                 )
                             else if (item.orderStatus == "Out for Delivery")
                               Text(
-                                  "Order Out for Delivery",
+                                  "Out for Delivery",
                                   style: TextStyle(fontSize: 12, height: 1, color: orangeColor),
                                 ),
                             Text(
